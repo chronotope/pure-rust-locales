@@ -1,6 +1,6 @@
-mod types;
+#![no_std]
 
-include!(concat!(env!("OUT_DIR"), "/hello.rs"));
+include!(concat!(env!("OUT_DIR"), "/locales.rs"));
 
 #[cfg(test)]
 mod tests {
