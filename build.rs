@@ -336,10 +336,16 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
             let singleton = &group[0][0];
 
             result.push_str(&match singleton {
-                Value::Raw(x) | Value::String(x) => {
-                    format!("        pub const {}: &'static str = {x:?};\n", key, x = x)
-                }
-                Value::Integer(x) => format!("        pub const {}: i64 = {x:?};\n", key, x = x),
+                Value::Raw(x) | Value::String(x) => format!(
+                    "        /// `{x:?}`\n        pub const {}: &'static str = {x:?};\n",
+                    key,
+                    x = x
+                ),
+                Value::Integer(x) => format!(
+                    "        /// `{x:?}`\n        pub const {}: i64 = {x:?};\n",
+                    key,
+                    x = x
+                ),
             });
         } else if group.len() == 1 && group[0].iter().map(u8::from).all_equal() {
             let values = &group[0];
@@ -347,12 +353,12 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
 
             result.push_str(&match values[0] {
                 Value::Raw(_) | Value::String(_) => format!(
-                    "        pub const {}: &'static [&'static str] = &[{x}];\n",
+                    "        /// `$[{x}]`\n        pub const {}: &'static [&'static str] = &[{x}];\n",
                     key,
                     x = formatted
                 ),
                 Value::Integer(_) => format!(
-                    "        pub const {}: &'static [i64] = &[{}];\n",
+                    "        /// `&[{x}]`\n        pub const {}: &'static [i64] = &[{}];\n",
                     key,
                     x = formatted
                 ),
@@ -363,6 +369,16 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
             .flatten()
             .all_equal()
         {
+            result.push_str("        /// ```ignore\n");
+            result.push_str("        /// &[\n");
+            for values in group.iter() {
+                result.push_str("        ///     &[");
+                result.push_str(&values.iter().map(|x| format!("{}", x)).join(", "));
+                result.push_str("],\n");
+            }
+            result.push_str("        /// ]\n");
+            result.push_str("        /// ```\n");
+
             result.push_str(&match group[0][0] {
                 Value::Raw(_) | Value::String(_) => format!(
                     "        pub const {}: &'static [&'static [&'static str]] = &[",
