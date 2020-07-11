@@ -309,7 +309,8 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
             .replace("=", "eq")
             .replace("<", "lt")
             .replace("..", "dotdot")
-            .replace("2", "two");
+            .replace("2", "two")
+            .to_uppercase();
         let group: Vec<_> = group.map(|x| &x.1).collect();
 
         if key == "copy" || key == "include" {
@@ -335,24 +336,26 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
             let singleton = &group[0][0];
 
             result.push_str(&match singleton {
-                Value::Raw(x) | Value::String(x) => format!(
-                    "        /// `{x:?}`\n        pub fn {}() -> &'static str {{ {x:?} }}\n",
-                    key,
-                    x = x
-                ),
-                Value::Integer(x) => format!(
-                    "        /// `{x:?}`\n        pub fn {}() -> i64 {{ {x:?} }}\n",
-                    key,
-                    x = x
-                ),
+                Value::Raw(x) | Value::String(x) => {
+                    format!("        pub const {}: &'static str = {x:?};\n", key, x = x)
+                }
+                Value::Integer(x) => format!("        pub const {}: i64 = {x:?};\n", key, x = x),
             });
         } else if group.len() == 1 && group[0].iter().map(u8::from).all_equal() {
             let values = &group[0];
             let formatted = values.iter().map(|x| format!("{}", x)).join(", ");
 
             result.push_str(&match values[0] {
-                Value::Raw(_) | Value::String(_) => format!("        /// `$[{x}]`\n        pub fn {}() -> &'static [&'static str] {{ &[{x}] }}\n", key, x=formatted),
-                Value::Integer(_) => format!("        /// `&[{x}]`\n        pub fn {}() -> &'static [i64] {{ &[{}] }}\n", key, x=formatted),
+                Value::Raw(_) | Value::String(_) => format!(
+                    "        pub const {}: &'static [&'static str] = &[{x}];\n",
+                    key,
+                    x = formatted
+                ),
+                Value::Integer(_) => format!(
+                    "        pub const {}: &'static [i64] = &[{}];\n",
+                    key,
+                    x = formatted
+                ),
             });
         } else if group
             .iter()
@@ -360,32 +363,21 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
             .flatten()
             .all_equal()
         {
-            result.push_str("        /// ```ignore\n");
-            result.push_str("        /// &[\n");
-            for values in group.iter() {
-                result.push_str("        ///     &[");
-                result.push_str(&values.iter().map(|x| format!("{}", x)).join(", "));
-                result.push_str("],\n");
-            }
-            result.push_str("        /// ]\n");
-            result.push_str("        /// ```\n");
-
             result.push_str(&match group[0][0] {
                 Value::Raw(_) | Value::String(_) => format!(
-                    "        pub fn {}() -> &'static [&'static [&'static str]] {{ &[",
+                    "        pub const {}: &'static [&'static [&'static str]] = &[",
                     key
                 ),
-                Value::Integer(_) => format!(
-                    "        pub fn {}() -> &'static [&'static [i64]] {{ &[",
-                    key
-                ),
+                Value::Integer(_) => {
+                    format!("        pub const {}: &'static [&'static [i64]] = &[", key)
+                }
             });
             for values in group.iter() {
                 result.push_str("&[");
                 result.push_str(&values.iter().map(|x| format!("{}", x)).join(", "));
                 result.push_str("], ");
             }
-            result.push_str("] }\n");
+            result.push_str("];\n");
         } else {
             unimplemented!("mixed types");
         }
@@ -406,8 +398,7 @@ fn generate_locale(
 
     for object in objects.iter() {
         if object.name != "LC_COLLATE" && object.name != "LC_CTYPE" {
-            result.push_str(&format!("    pub struct {};\n\n", object.name));
-            result.push_str(&format!("    impl {} {{\n", object.name));
+            result.push_str(&format!("    pub mod {} {{\n", object.name));
             result.push_str(generate_object(&object, locales).as_str());
             result.push_str("    }\n\n");
         }
