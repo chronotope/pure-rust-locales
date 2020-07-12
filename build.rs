@@ -353,7 +353,7 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
 
             result.push_str(&match values[0] {
                 Value::Raw(_) | Value::String(_) => format!(
-                    "        /// `$[{x}]`\n        pub const {}: &'static [&'static str] = &[{x}];\n",
+                    "        /// `&[{x}]`\n        pub const {}: &'static [&'static str] = &[{x}];\n",
                     key,
                     x = formatted
                 ),
