@@ -464,7 +464,7 @@ fn generate_variants(langs: &[(&str, &str)]) -> String {
     let mut result = String::new();
 
     result.push_str("#[allow(non_camel_case_types,dead_code)]\n");
-    result.push_str("enum Locale {\n");
+    result.push_str("pub enum Locale {\n");
     for (lang, norm) in langs {
         result.push_str(&format!("    /// {}\n", lang));
         result.push_str(&format!("    {},\n", norm));
@@ -490,13 +490,12 @@ fn generate_variants(langs: &[(&str, &str)]) -> String {
     result.push_str("macro_rules! locale_match {\n");
     result.push_str("    ($locale:expr => $($item:ident)::+) => {{\n");
     result.push_str("        match $locale {\n");
-    for (lang, norm) in langs {
+    for (_, norm) in langs {
         result.push_str(&format!(
-            "            {:?} => Ok($crate::{}::$($item)::+),\n",
-            lang, norm,
+            "            $crate::Locale::{} => $crate::{}::$($item)::+,\n",
+            norm, norm,
         ));
     }
-    result.push_str("            _ => Err($crate::UnknownLocale),\n");
     result.push_str("        }\n");
     result.push_str("    }}\n");
     result.push_str("}\n\n");
