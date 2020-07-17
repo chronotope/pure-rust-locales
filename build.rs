@@ -2,7 +2,7 @@ use itertools::Itertools;
 use std::collections::HashMap;
 use std::env;
 use std::fs::{read_dir, File};
-use std::io::Write;
+use std::io::{BufWriter, Write};
 use std::path::Path;
 
 const LOCALES: &str = "localedata/locales";
@@ -403,14 +403,14 @@ fn generate_object(object: &Object, locales: &HashMap<String, Vec<Object>>) -> S
 }
 
 fn generate_locale(
-    lang: &str,
+    lang_normalized: &str,
     objects: &Vec<Object>,
     locales: &HashMap<String, Vec<Object>>,
 ) -> String {
     let mut result = String::new();
 
     result.push_str("#[allow(non_snake_case,non_camel_case_types,dead_code,unused_imports)]\n");
-    result.push_str(&format!("pub mod {} {{\n", lang.replace("@", "_")));
+    result.push_str(&format!("pub mod {} {{\n", lang_normalized));
 
     for object in objects.iter() {
         if object.name == "LC_COLLATE"
@@ -460,6 +460,50 @@ fn recognize_lang<'a, E: ParseError<&'a str>>(
     Ok((i, (lang, country, variant)))
 }
 
+fn generate_variants(langs: &[(&str, &str)]) -> String {
+    let mut result = String::new();
+
+    result.push_str("#[allow(non_camel_case_types,dead_code)]\n");
+    result.push_str("enum Locale {\n");
+    for (lang, norm) in langs {
+        result.push_str(&format!("    /// {}\n", lang));
+        result.push_str(&format!("    {},\n", norm));
+    }
+    result.push_str("}\n\n");
+
+    result.push_str("impl core::convert::TryFrom<&str> for Locale {\n");
+    result.push_str("    type Error = UnknownLocale;\n\n");
+    result.push_str("    fn try_from(i: &str) -> Result<Self, Self::Error> {\n");
+    result.push_str("        match i {\n");
+    for (lang, norm) in langs {
+        result.push_str(&format!(
+            "            {:?} => Ok(Locale::{}),\n",
+            lang, norm,
+        ));
+    }
+    result.push_str("            _ => Err(UnknownLocale),\n");
+    result.push_str("        }\n");
+    result.push_str("    }\n");
+    result.push_str("}\n\n");
+
+    result.push_str("#[macro_export]\n");
+    result.push_str("macro_rules! locale_match {\n");
+    result.push_str("    ($locale:expr => $($item:ident)::+) => {{\n");
+    result.push_str("        match $locale {\n");
+    for (lang, norm) in langs {
+        result.push_str(&format!(
+            "            {:?} => Ok($crate::{}::$($item)::+),\n",
+            lang, norm,
+        ));
+    }
+    result.push_str("            _ => Err($crate::UnknownLocale),\n");
+    result.push_str("        }\n");
+    result.push_str("    }}\n");
+    result.push_str("}\n\n");
+
+    result
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut locales = HashMap::new();
 
@@ -476,14 +520,34 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let out_dir = env::var("OUT_DIR").unwrap();
     let dest_path = Path::new(&out_dir).join("locales.rs");
-    let mut f = File::create(&dest_path)?;
+    let f = File::create(&dest_path)?;
+    let mut stream = BufWriter::new(f);
+
+    let locales: HashMap<_, _> = locales
+        .into_iter()
+        .filter(|(lang, _)| recognize_lang::<(&str, ErrorKind)>(lang.as_str()).is_ok())
+        .collect();
+
+    let normalized: HashMap<_, _> = locales
+        .iter()
+        .map(|(lang, _)| (lang, lang.replace("@", "_")))
+        .collect();
 
     for (lang, objects) in locales.iter() {
-        if let Ok(_) = recognize_lang::<(&str, ErrorKind)>(lang.as_str()) {
-            let code = generate_locale(lang.as_ref(), &objects, &locales);
-            f.write_all(code.as_bytes())?;
-        }
+        let code = generate_locale(normalized[lang].as_str(), &objects, &locales);
+        stream.write_all(code.as_bytes())?;
     }
+
+    stream.write_all(
+        generate_variants(
+            locales
+                .iter()
+                .map(|(lang, _)| (lang.as_str(), normalized[lang].as_str()))
+                .collect::<Vec<_>>()
+                .as_slice(),
+        )
+        .as_bytes(),
+    )?;
 
     Ok(())
 }
