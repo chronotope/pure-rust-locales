@@ -413,7 +413,32 @@ fn generate_locale(
     result.push_str(&format!("pub mod {} {{\n", lang.replace("@", "_")));
 
     for object in objects.iter() {
-        if object.name != "LC_COLLATE" && object.name != "LC_CTYPE" {
+        if object.name == "LC_COLLATE"
+            || object.name == "LC_CTYPE"
+            || object.name == "LC_MEASUREMENT"
+            || object.name == "LC_PAPER"
+            || object.name == "LC_NAME"
+        {
+            continue;
+        } else if object.values.len() == 1 {
+            let (key, value) = &object.values[0];
+            match key.as_str() {
+                "copy" => {
+                    assert_eq!(value.len(), 1);
+                    match &value[0] {
+                        Value::String(x) => {
+                            result.push_str(&format!(
+                                "    pub use super::{}::{};\n",
+                                x.replace("@", "_"),
+                                object.name
+                            ));
+                        }
+                        x => panic!("unexpected value for key {}: {:?}", key, x),
+                    }
+                }
+                _ => {}
+            }
+        } else {
             result.push_str(&format!("    pub mod {} {{\n", object.name));
             result.push_str(generate_object(&object, locales).as_str());
             result.push_str("    }\n\n");
