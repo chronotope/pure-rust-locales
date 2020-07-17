@@ -464,7 +464,7 @@ fn generate_variants(langs: &[(&str, &str)]) -> String {
     let mut result = String::new();
 
     result.push_str("#[allow(non_camel_case_types,dead_code)]\n");
-    result.push_str("#[derive(Debug)]\n");
+    result.push_str("#[derive(Debug, Copy, Clone, PartialEq)]\n");
     result.push_str("pub enum Locale {\n");
     for (lang, norm) in langs {
         result.push_str(&format!("    /// {}\n", lang));
