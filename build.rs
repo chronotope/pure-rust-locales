@@ -472,6 +472,13 @@ fn generate_variants(langs: &[(&str, &str)]) -> String {
     }
     result.push_str("}\n\n");
 
+    result.push_str("#[allow(dead_code)]\n");
+    result.push_str("pub const LOCALE_VARIANTS: &[Locale] = &[\n");
+    for (_, norm) in langs {
+        result.push_str(&format!("    Locale::{},\n", norm));
+    }
+    result.push_str("];\n\n");
+
     result.push_str("impl core::convert::TryFrom<&str> for Locale {\n");
     result.push_str("    type Error = UnknownLocale;\n\n");
     result.push_str("    fn try_from(i: &str) -> Result<Self, Self::Error> {\n");
