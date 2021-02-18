@@ -10,7 +10,7 @@ documentation = "https://docs.rs/pure-rust-locales"
 readme = "README.md"
 keywords = ["locale", "libc", "i18n", "internationalisation", "no_std"]
 edition = "2018"
-include = ["src/**/*.rs", "README.md", "LICENSE.Apache-2.0", "LICENSE.MIT"]
+include = ["src/**/*.rs", "tests/**/*.rs", "README.md", "LICENSE.Apache-2.0", "LICENSE.MIT"]
 
 [workspace]
 members = [
