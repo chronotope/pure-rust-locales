@@ -1,6 +1,6 @@
 [package]
 name = "pure-rust-locales"
-version = "0.5.3"
+version = "0.5.4"
 authors = ["Cecile Tonglet <cecile.tonglet@cecton.com>"]
 description = "Pure Rust locales imported directly from the GNU C Library. `LC_COLLATE` and `LC_CTYPE` are not yet supported."
 license = "MIT OR Apache-2.0"
