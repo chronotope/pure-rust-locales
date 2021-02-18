@@ -1,0 +1,13 @@
+[package]
+name = "generate-api"
+version = "0.0.0"
+authors = ["Cecile Tonglet <cecile.tonglet@cecton.com>"]
+edition = "2018"
+
+# DO NOT PUBLISH!
+
+[dependencies]
+anyhow = "1.0"
+cargo_metadata = "0.12"
+itertools = "0.8"
+nom = "5.0"
