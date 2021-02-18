@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::fmt;
 
 fn generate_object(
+    f: &mut fmt::Formatter,
     object: &parser::Object,
     locales: &HashMap<String, Vec<parser::Object>>,
 ) -> String {
@@ -37,7 +38,7 @@ fn generate_object(
                         .iter()
                         .find(|x| x.name == object.name)
                         .expect("could not find object to copy from");
-                    result.push_str(generate_object(other_object, locales).as_str());
+                    result.push_str(generate_object(f, other_object, locales).as_str());
                 }
                 _ => panic!("only a string value is accepted for key \"copy\""),
             }
@@ -117,6 +118,7 @@ fn generate_object(
 }
 
 fn generate_locale(
+    f: &mut fmt::Formatter,
     lang_normalized: &str,
     objects: &Vec<parser::Object>,
     locales: &HashMap<String, Vec<parser::Object>>,
@@ -154,7 +156,7 @@ fn generate_locale(
             }
         } else {
             result.push_str(&format!("    pub mod {} {{\n", object.name));
-            result.push_str(generate_object(&object, locales).as_str());
+            result.push_str(generate_object(f, &object, locales).as_str());
             result.push_str("    }\n\n");
         }
     }
@@ -164,48 +166,86 @@ fn generate_locale(
     result
 }
 
-fn generate_variants(langs: &[(&str, &str)]) -> String {
-    let mut result = String::new();
+fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Result {
+    write!(
+        f,
+        r#"
+        #[allow(non_camel_case_types,dead_code)]
+        #[derive(Debug, Copy, Clone, PartialEq)]
+        pub enum Locale {{
+        "#,
+    )?;
 
-    result.push_str("#[allow(non_camel_case_types,dead_code)]\n");
-    result.push_str("#[derive(Debug, Copy, Clone, PartialEq)]\n");
-    result.push_str("pub enum Locale {\n");
     for (lang, norm) in langs {
-        result.push_str(&format!("    /// {}\n", lang));
-        result.push_str(&format!("    {},\n", norm));
+        write!(
+            f,
+            r#"
+            /// {lang}
+            {norm},
+            "#,
+            lang = lang,
+            norm = norm,
+        )?;
     }
-    result.push_str("}\n\n");
 
-    result.push_str("impl core::convert::TryFrom<&str> for Locale {\n");
-    result.push_str("    type Error = UnknownLocale;\n\n");
-    result.push_str("    fn try_from(i: &str) -> Result<Self, Self::Error> {\n");
-    result.push_str("        match i {\n");
+    write!(
+        f,
+        r#"
+        }}
+
+        impl core::convert::TryFrom<&str> for Locale {{
+            type Error = UnknownLocale;
+
+            fn try_from(i: &str) -> Result<Self, Self::Error> {{
+                match i {{
+        "#,
+    )?;
+
     for (lang, norm) in langs {
-        result.push_str(&format!(
-            "            {:?} => Ok(Locale::{}),\n",
-            lang, norm,
-        ));
+        write!(
+            f,
+            r#"
+            {lang:?} => Ok(Locale::{norm}),
+            "#,
+            lang = lang,
+            norm = norm,
+        )?;
     }
-    result.push_str("            _ => Err(UnknownLocale),\n");
-    result.push_str("        }\n");
-    result.push_str("    }\n");
-    result.push_str("}\n\n");
 
-    result.push_str("#[macro_export]\n");
-    result.push_str("macro_rules! locale_match {\n");
-    result.push_str("    ($locale:expr => $($item:ident)::+) => {{\n");
-    result.push_str("        match $locale {\n");
+    write!(
+        f,
+        r#"
+                    _ => Err(UnknownLocale),
+                }}
+            }}
+        }}
+
+        #[macro_export]
+        macro_rules! locale_match {{
+            ($locale:expr => $($item:ident)::+) => {{{{
+                match $locale {{
+        "#,
+    )?;
+
     for (_, norm) in langs {
-        result.push_str(&format!(
-            "            $crate::Locale::{} => $crate::{}::$($item)::+,\n",
-            norm, norm,
-        ));
+        write!(
+            f,
+            r#"
+            $crate::Locale::{norm} => $crate::{norm}::$($item)::+,
+            "#,
+            norm = norm,
+        )?;
     }
-    result.push_str("        }\n");
-    result.push_str("    }}\n");
-    result.push_str("}\n\n");
 
-    result
+    write!(
+        f,
+        r#"
+                }}
+            }}}}
+        }}
+
+        "#,
+    )
 }
 
 pub struct CodeGenerator(pub HashMap<String, Vec<parser::Object>>);
@@ -233,7 +273,7 @@ impl fmt::Display for CodeGenerator {
         let mut sorted: Vec<_> = locales.iter().collect();
         sorted.sort_unstable_by_key(|(lang, _)| lang.to_string());
         for (lang, objects) in sorted.iter() {
-            let code = generate_locale(normalized[lang].as_str(), &objects, locales);
+            let code = generate_locale(f, normalized[lang].as_str(), &objects, locales);
             write!(f, "{}", code)?;
         }
 
@@ -242,6 +282,6 @@ impl fmt::Display for CodeGenerator {
             .map(|(lang, _)| (lang.as_str(), normalized[lang].as_str()))
             .collect();
         sorted.sort_unstable_by_key(|(lang, _)| lang.to_string());
-        write!(f, "{}", generate_variants(&sorted),)
+        generate_variants(f, &sorted)
     }
 }
