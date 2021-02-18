@@ -180,7 +180,7 @@ fn generate_locale(
         lang_normalized,
     )?;
 
-    for object in objects.iter() {
+    for object in objects.iter().sorted_by_key(|x| x.name.to_string()) {
         if object.name == "LC_COLLATE"
             || object.name == "LC_CTYPE"
             || object.name == "LC_MEASUREMENT"
