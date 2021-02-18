@@ -7,9 +7,7 @@ fn generate_object(
     f: &mut fmt::Formatter,
     object: &parser::Object,
     locales: &HashMap<String, Vec<parser::Object>>,
-) -> String {
-    let mut result = String::new();
-
+) -> fmt::Result {
     for (key, group) in &object
         .values
         .iter()
@@ -38,7 +36,7 @@ fn generate_object(
                         .iter()
                         .find(|x| x.name == object.name)
                         .expect("could not find object to copy from");
-                    result.push_str(generate_object(f, other_object, locales).as_str());
+                    generate_object(f, other_object, locales)?;
                 }
                 _ => panic!("only a string value is accepted for key \"copy\""),
             }
@@ -46,75 +44,125 @@ fn generate_object(
         }
 
         if group.len() == 1 && group[0].len() == 0 {
-            return result;
+            return Ok(());
         } else if group.len() == 1 && group[0].len() == 1 {
             let singleton = &group[0][0];
 
-            result.push_str(&match singleton {
-                parser::Value::Raw(x) | parser::Value::String(x) => format!(
-                    "        /// `{x:?}`\n        pub const {}: &'static str = {x:?};\n",
-                    key,
+            match singleton {
+                parser::Value::Raw(x) | parser::Value::String(x) => write!(
+                    f,
+                    r#"
+                    /// `{x:?}`
+                    pub const {key}: &'static str = {x:?};
+                    "#,
+                    key = key,
                     x = x
-                ),
-                parser::Value::Integer(x) => format!(
-                    "        /// `{x:?}`\n        pub const {}: i64 = {x:?};\n",
-                    key,
+                )?,
+                parser::Value::Integer(x) => write!(
+                    f,
+                    r#"
+                    /// `{x:?}`
+                    pub const {key}: i64 = {x:?};
+                    "#,
+                    key = key,
                     x = x
-                ),
-            });
+                )?,
+            }
         } else if group.len() == 1 && group[0].iter().map(u8::from).all_equal() {
             let values = &group[0];
             let formatted = values.iter().map(|x| format!("{}", x)).join(", ");
 
-            result.push_str(&match values[0] {
-                parser::Value::Raw(_) | parser::Value::String(_) => format!(
-                    "        /// `&[{x}]`\n        pub const {}: &'static [&'static str] = &[{x}];\n",
-                    key,
+            match &values[0] {
+                parser::Value::Raw(_) | parser::Value::String(_) => write!(
+                    f,
+                    r#"
+                    /// `&[{x}]`
+                    pub const {key}: &'static [&'static str] = &[{x}];
+                    "#,
+                    key = key,
                     x = formatted
-                ),
-                parser::Value::Integer(_) => format!(
-                    "        /// `&[{x}]`\n        pub const {}: &'static [i64] = &[{}];\n",
-                    key,
+                )?,
+                parser::Value::Integer(_) => write!(
+                    f,
+                    r#"
+                    /// `&[{x}]`
+                    pub const {key}: &'static [i64] = &[{x}];
+                    "#,
+                    key = key,
                     x = formatted
-                ),
-            });
+                )?,
+            }
         } else if group
             .iter()
             .map(|x| x.iter().map(u8::from))
             .flatten()
             .all_equal()
         {
-            result.push_str("        /// ```ignore\n");
-            result.push_str("        /// &[\n");
-            for values in group.iter() {
-                result.push_str("        ///     &[");
-                result.push_str(&values.iter().map(|x| format!("{}", x)).join(", "));
-                result.push_str("],\n");
-            }
-            result.push_str("        /// ]\n");
-            result.push_str("        /// ```\n");
+            write!(
+                f,
+                r#"
+                /// ```ignore
+                /// &[
+                "#,
+            )?;
 
-            result.push_str(&match group[0][0] {
-                parser::Value::Raw(_) | parser::Value::String(_) => format!(
-                    "        pub const {}: &'static [&'static [&'static str]] = &[",
-                    key
-                ),
-                parser::Value::Integer(_) => {
-                    format!("        pub const {}: &'static [&'static [i64]] = &[", key)
-                }
-            });
             for values in group.iter() {
-                result.push_str("&[");
-                result.push_str(&values.iter().map(|x| format!("{}", x)).join(", "));
-                result.push_str("], ");
+                write!(
+                    f,
+                    r#"
+                    ///     &[{}],
+                    "#,
+                    values.iter().map(|x| format!("{}", x)).join(", "),
+                )?;
             }
-            result.push_str("];\n");
+
+            write!(
+                f,
+                r#"
+                /// ]
+                /// ```
+                "#,
+            )?;
+
+            match group[0][0] {
+                parser::Value::Raw(_) | parser::Value::String(_) => write!(
+                    f,
+                    r#"
+                    pub const {}: &'static [&'static [&'static str]] = &[
+                    "#,
+                    key
+                )?,
+                parser::Value::Integer(_) => write!(
+                    f,
+                    r#"
+                    pub const {}: &'static [&'static [i64]] = &[
+                    "#,
+                    key,
+                )?,
+            }
+
+            for values in group.iter() {
+                write!(
+                    f,
+                    r#"
+                    &[{}],
+                    "#,
+                    values.iter().map(|x| format!("{}", x)).join(", "),
+                )?;
+            }
+
+            write!(
+                f,
+                r#"
+                ];
+                "#,
+            )?;
         } else {
             unimplemented!("mixed types");
         }
     }
 
-    result
+    Ok(())
 }
 
 fn generate_locale(
@@ -122,11 +170,15 @@ fn generate_locale(
     lang_normalized: &str,
     objects: &Vec<parser::Object>,
     locales: &HashMap<String, Vec<parser::Object>>,
-) -> String {
-    let mut result = String::new();
-
-    result.push_str("#[allow(non_snake_case,non_camel_case_types,dead_code,unused_imports)]\n");
-    result.push_str(&format!("pub mod {} {{\n", lang_normalized));
+) -> fmt::Result {
+    write!(
+        f,
+        r#"
+        #[allow(non_snake_case,non_camel_case_types,dead_code,unused_imports)]
+        pub mod {} {{
+        "#,
+        lang_normalized,
+    )?;
 
     for object in objects.iter() {
         if object.name == "LC_COLLATE"
@@ -142,28 +194,45 @@ fn generate_locale(
                 "copy" => {
                     assert_eq!(value.len(), 1);
                     match &value[0] {
-                        parser::Value::String(x) => {
-                            result.push_str(&format!(
-                                "    pub use super::{}::{};\n",
-                                x.replace("@", "_"),
-                                object.name
-                            ));
-                        }
+                        parser::Value::String(x) => write!(
+                            f,
+                            r#"
+                            pub use super::{}::{};
+                            "#,
+                            x.replace("@", "_"),
+                            object.name,
+                        )?,
                         x => panic!("unexpected value for key {}: {:?}", key, x),
                     }
                 }
                 _ => {}
             }
         } else {
-            result.push_str(&format!("    pub mod {} {{\n", object.name));
-            result.push_str(generate_object(f, &object, locales).as_str());
-            result.push_str("    }\n\n");
+            write!(
+                f,
+                r#"
+                pub mod {} {{
+                "#,
+                object.name,
+            )?;
+            generate_object(f, &object, locales)?;
+            write!(
+                f,
+                r#"
+                }}
+
+                "#,
+            )?;
         }
     }
 
-    result.push_str("}\n\n");
+    write!(
+        f,
+        r#"
+        }}
 
-    result
+        "#,
+    )
 }
 
 fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Result {
@@ -273,8 +342,7 @@ impl fmt::Display for CodeGenerator {
         let mut sorted: Vec<_> = locales.iter().collect();
         sorted.sort_unstable_by_key(|(lang, _)| lang.to_string());
         for (lang, objects) in sorted.iter() {
-            let code = generate_locale(f, normalized[lang].as_str(), &objects, locales);
-            write!(f, "{}", code)?;
+            generate_locale(f, normalized[lang].as_str(), &objects, locales)?;
         }
 
         let mut sorted: Vec<_> = locales
