@@ -44,7 +44,6 @@ fn main() -> Result<()> {
         let mut f = Sha256::default();
 
         write!(f, "{}", generator::CodeGenerator(locales))?;
-        f.flush()?;
 
         let expected = f.finalize();
         eprintln!("expected: {:x}", expected);
@@ -61,10 +60,8 @@ fn main() -> Result<()> {
         }
     } else {
         eprintln!("Writing to file `{}`...", lib_file.display());
-        let mut f = Box::new(BufWriter::new(fs::File::create(&lib_file)?)) as Box<dyn Write>;
-
+        let mut f = BufWriter::new(fs::File::create(&lib_file)?);
         write!(f, "{}", generator::CodeGenerator(locales))?;
-        f.flush()?;
     }
 
     Ok(())
