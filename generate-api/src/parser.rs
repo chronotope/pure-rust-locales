@@ -199,10 +199,7 @@ fn value<'a, E: ParseError<&'a str>>(
         alt((
             map_res(integer, |s| i64::from_str_radix(s, 10).map(Value::Integer)),
             map(|x| string(x, escape_char), Value::String),
-            map(
-                |x| parse_raw(x, escape_char, comment_char),
-                Value::Raw,
-            ),
+            map(|x| parse_raw(x, escape_char, comment_char), Value::Raw),
         )),
     )(i)
 }
