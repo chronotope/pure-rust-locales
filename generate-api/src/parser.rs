@@ -201,7 +201,7 @@ fn value<'a, E: ParseError<&'a str>>(
             map(|x| string(x, escape_char), Value::String),
             map(
                 |x| parse_raw(x, escape_char, comment_char),
-                |s| Value::Raw(String::from(s)),
+                Value::Raw,
             ),
         )),
     )(i)
@@ -250,7 +250,7 @@ fn object<'a, E: ParseError<&'a str>>(
             name: name.to_string(),
             values: values
                 .into_iter()
-                .map(|(k, v)| (k.to_string(), v.into_iter().filter_map(|x| x).collect()))
+                .map(|(k, v)| (k, v.into_iter().filter_map(|x| x).collect()))
                 .collect(),
         },
     ))
