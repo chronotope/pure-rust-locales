@@ -1,6 +1,7 @@
-[![Latest Version](https://img.shields.io/crates/v/pure-rust-locales.svg)](https://crates.io/crates/gptman)
+![Rust](https://github.com/cecton/pure-rust-locales/workflows/main/badge.svg)
+[![Latest Version](https://img.shields.io/crates/v/pure-rust-locales.svg)](https://crates.io/crates/pure-rust-locales)
 ![License](https://img.shields.io/crates/l/pure-rust-locales)
-[![Docs.rs](https://docs.rs/pure-rust-locales/badge.svg)](https://docs.rs/gptman)
+[![Docs.rs](https://docs.rs/pure-rust-locales/badge.svg)](https://docs.rs/pure-rust-locales)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-success)
 
 pure-rust-locales
