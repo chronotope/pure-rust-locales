@@ -1,17 +1,19 @@
 use crate::parser;
+use indenter::CodeFormatter;
 use itertools::Itertools;
 use std::collections::HashMap;
 use std::fmt;
+use std::fmt::Write;
 
-fn generate_object(
-    f: &mut fmt::Formatter,
+fn generate_object<W: Write>(
+    f: &mut CodeFormatter<W>,
     object: &parser::Object,
     locales: &HashMap<String, Vec<parser::Object>>,
 ) -> fmt::Result {
     for (key, group) in &object
         .values
         .iter()
-        .filter(|x| x.1.len() > 0)
+        .filter(|x| !x.1.is_empty())
         .sorted_by(|a, b| Ord::cmp(&a.0, &b.0))
         .group_by(|x| x.0.clone())
     {
@@ -31,7 +33,7 @@ fn generate_object(
                 parser::Value::String(other_lang) => {
                     let other = locales
                         .get(other_lang)
-                        .expect(&format!("unknown locale: {}", other_lang));
+                        .unwrap_or_else(|| panic!("unknown locale: {}", other_lang));
                     let other_object = other
                         .iter()
                         .find(|x| x.name == object.name)
@@ -43,7 +45,7 @@ fn generate_object(
             continue;
         }
 
-        if group.len() == 1 && group[0].len() == 0 {
+        if group.len() == 1 && group[0].is_empty() {
             return Ok(());
         } else if group.len() == 1 && group[0].len() == 1 {
             let singleton = &group[0][0];
@@ -53,7 +55,7 @@ fn generate_object(
                     f,
                     r#"
                     /// `{x:?}`
-                    pub const {key}: &'static str = {x:?};
+                    pub const {key}: &str = {x:?};
                     "#,
                     key = key,
                     x = x
@@ -77,7 +79,7 @@ fn generate_object(
                     f,
                     r#"
                     /// `&[{x}]`
-                    pub const {key}: &'static [&'static str] = &[{x}];
+                    pub const {key}: &[&str] = &[{x}];
                     "#,
                     key = key,
                     x = formatted
@@ -86,7 +88,7 @@ fn generate_object(
                     f,
                     r#"
                     /// `&[{x}]`
-                    pub const {key}: &'static [i64] = &[{x}];
+                    pub const {key}: &[i64] = &[{x}];
                     "#,
                     key = key,
                     x = formatted
@@ -128,18 +130,19 @@ fn generate_object(
                 parser::Value::Raw(_) | parser::Value::String(_) => write!(
                     f,
                     r#"
-                    pub const {}: &'static [&'static [&'static str]] = &[
+                    pub const {}: &[&[&str]] = &[
                     "#,
                     key
                 )?,
                 parser::Value::Integer(_) => write!(
                     f,
                     r#"
-                    pub const {}: &'static [&'static [i64]] = &[
+                    pub const {}: &[&[i64]] = &[
                     "#,
                     key,
                 )?,
             }
+            f.indent(1);
 
             for values in group.iter() {
                 write!(
@@ -151,6 +154,7 @@ fn generate_object(
                 )?;
             }
 
+            f.dedent(1);
             write!(
                 f,
                 r#"
@@ -165,20 +169,22 @@ fn generate_object(
     Ok(())
 }
 
-fn generate_locale(
-    f: &mut fmt::Formatter,
+fn generate_locale<W: Write>(
+    f: &mut CodeFormatter<W>,
     lang_normalized: &str,
-    objects: &Vec<parser::Object>,
+    objects: &[parser::Object],
     locales: &HashMap<String, Vec<parser::Object>>,
 ) -> fmt::Result {
     write!(
         f,
         r#"
+
         #[allow(non_snake_case,non_camel_case_types,dead_code,unused_imports)]
         pub mod {} {{
         "#,
         lang_normalized,
     )?;
+    f.indent(1);
 
     for object in objects.iter().sorted_by_key(|x| x.name.to_string()) {
         if object.name == "LC_COLLATE"
@@ -190,6 +196,7 @@ fn generate_locale(
             continue;
         } else if object.values.len() == 1 {
             let (key, value) = &object.values[0];
+            #[allow(clippy::single_match)]
             match key.as_str() {
                 "copy" => {
                     assert_eq!(value.len(), 1);
@@ -215,35 +222,38 @@ fn generate_locale(
                 "#,
                 object.name,
             )?;
+            f.indent(1);
             generate_object(f, &object, locales)?;
+            f.dedent(1);
             write!(
                 f,
                 r#"
                 }}
-
                 "#,
             )?;
         }
     }
 
+    f.dedent(1);
     write!(
         f,
         r#"
         }}
-
         "#,
     )
 }
 
-fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Result {
+fn generate_variants<W: Write>(f: &mut CodeFormatter<W>, langs: &[(&str, &str)]) -> fmt::Result {
     write!(
         f,
         r#"
+
         #[allow(non_camel_case_types,dead_code)]
         #[derive(Debug, Copy, Clone, PartialEq)]
         pub enum Locale {{
         "#,
     )?;
+    f.indent(1);
 
     for (lang, norm) in langs {
         write!(
@@ -257,6 +267,7 @@ fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Res
         )?;
     }
 
+    f.dedent(1);
     write!(
         f,
         r#"
@@ -269,6 +280,7 @@ fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Res
                 match i {{
         "#,
     )?;
+    f.indent(3);
 
     for (lang, norm) in langs {
         write!(
@@ -281,6 +293,7 @@ fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Res
         )?;
     }
 
+    f.dedent(3);
     write!(
         f,
         r#"
@@ -295,6 +308,7 @@ fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Res
                 match $locale {{
         "#,
     )?;
+    f.indent(3);
 
     for (_, norm) in langs {
         write!(
@@ -305,6 +319,7 @@ fn generate_variants(f: &mut fmt::Formatter, langs: &[(&str, &str)]) -> fmt::Res
             norm = norm,
         )?;
     }
+    f.dedent(3);
 
     write!(
         f,
@@ -321,6 +336,7 @@ pub struct CodeGenerator(pub HashMap<String, Vec<parser::Object>>);
 
 impl fmt::Display for CodeGenerator {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut f = CodeFormatter::new(f, "    ");
         write!(
             f,
             r#"
@@ -342,7 +358,7 @@ impl fmt::Display for CodeGenerator {
         let mut sorted: Vec<_> = locales.iter().collect();
         sorted.sort_unstable_by_key(|(lang, _)| lang.to_string());
         for (lang, objects) in sorted.iter() {
-            generate_locale(f, normalized[lang].as_str(), &objects, locales)?;
+            generate_locale(&mut f, normalized[lang].as_str(), &objects, locales)?;
         }
 
         let mut sorted: Vec<_> = locales
@@ -350,6 +366,6 @@ impl fmt::Display for CodeGenerator {
             .map(|(lang, _)| (lang.as_str(), normalized[lang].as_str()))
             .collect();
         sorted.sort_unstable_by_key(|(lang, _)| lang.to_string());
-        generate_variants(f, &sorted)
+        generate_variants(&mut f, &sorted)
     }
 }

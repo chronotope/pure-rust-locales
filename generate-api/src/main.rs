@@ -3,14 +3,17 @@ pub mod parser;
 
 use anyhow::{bail, Result};
 use cargo_metadata::MetadataCommand;
+use sha2::{Digest, Sha256};
 use std::collections::HashMap;
+use std::env;
 use std::fs;
+use std::io;
 use std::io::{BufWriter, Write};
 
 fn main() -> Result<()> {
     let metadata = MetadataCommand::new().exec()?;
 
-    println!("Reading data...");
+    eprintln!("Reading data...");
 
     let locales_path = metadata.workspace_root.join("localedata").join("locales");
     let mut locales = HashMap::new();
@@ -28,31 +31,38 @@ fn main() -> Result<()> {
 
         let path = entry.path();
         if let Ok(input) = std::fs::read_to_string(&path) {
-            println!("{}", path.display());
+            eprintln!("{}", path.display());
             let objects = parser::parse(&input)?;
             locales.insert(lang.to_string(), objects);
         }
     }
 
-    let dest_path = metadata.workspace_root.join("src").join("lib.rs");
-    let mut f = BufWriter::new(fs::File::create(&dest_path)?);
+    let lib_file = metadata.workspace_root.join("src").join("lib.rs");
 
-    println!("Writing to file `{}`...", dest_path.display());
+    if matches!(env::var("CHECK"), Ok(_)) {
+        eprintln!("Calculating checksum...");
+        let mut f = Sha256::default();
 
-    write!(f, "{}", generator::CodeGenerator(locales))?;
+        write!(f, "{}", generator::CodeGenerator(locales))?;
 
-    drop(f);
+        let expected = f.finalize();
+        eprintln!("expected: {:x}", expected);
 
-    let status = std::process::Command::new("cargo")
-        .current_dir(metadata.workspace_root)
-        .args(&["fmt", "--"])
-        .arg(dest_path)
-        .status()
-        .unwrap();
+        let mut hasher = Sha256::default();
+        io::copy(&mut fs::File::open(&lib_file)?, &mut hasher)?;
+        let got = hasher.finalize();
+        eprintln!("got: {:x}", got);
 
-    if status.success() {
-        Ok(())
+        if expected != got {
+            bail!(
+                "lib.rs file has been modified! Please run `cargo run -p generate-api --release`",
+            );
+        }
     } else {
-        bail!("command `cargo fmt` failed");
+        eprintln!("Writing to file `{}`...", lib_file.display());
+        let mut f = BufWriter::new(fs::File::create(&lib_file)?);
+        write!(f, "{}", generator::CodeGenerator(locales))?;
     }
+
+    Ok(())
 }

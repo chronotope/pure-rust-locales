@@ -199,10 +199,7 @@ fn value<'a, E: ParseError<&'a str>>(
         alt((
             map_res(integer, |s| i64::from_str_radix(s, 10).map(Value::Integer)),
             map(|x| string(x, escape_char), Value::String),
-            map(
-                |x| parse_raw(x, escape_char, comment_char),
-                |s| Value::Raw(String::from(s)),
-            ),
+            map(|x| parse_raw(x, escape_char, comment_char), Value::Raw),
         )),
     )(i)
 }
@@ -250,7 +247,7 @@ fn object<'a, E: ParseError<&'a str>>(
             name: name.to_string(),
             values: values
                 .into_iter()
-                .map(|(k, v)| (k.to_string(), v.into_iter().filter_map(|x| x).collect()))
+                .map(|(k, v)| (k, v.into_iter().filter_map(|x| x).collect()))
                 .collect(),
         },
     ))
