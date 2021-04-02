@@ -10,7 +10,7 @@ Pure Rust locales imported directly from the GNU C Library. `LC_COLLATE` and
 `LC_CTYPE` are not yet supported.
 
 `pure-rust-locales` **is not** an internationalization library by itself. It is
-too low level for that. It provides only a very low level API. Is is meant to
+too low level for that. It provides only a very low level API. It is meant to
 be used by internationalization libraries.
 
 Used By
