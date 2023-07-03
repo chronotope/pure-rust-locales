@@ -71,6 +71,7 @@ fn main() -> Result<()> {
 
 fn validate_and_fix(objects: &mut Vec<Object>) {
     validate_and_fix_t_fmt_ampm(objects);
+    validate_and_fix_d_t_fmt(objects);
 }
 
 /// Add a `T_FMT_AMPM` item if it is missing (happens for 3 locales).
@@ -101,6 +102,42 @@ fn validate_and_fix_t_fmt_ampm(objects: &mut Vec<Object>) {
                 false => vec![Value::String("%l:%M:%S %p".to_string())],
             };
             object.values.push(("t_fmt_ampm".to_string(), value));
+        }
+    }
+}
+
+/// In some locales `D_T_FMT` refers to other items:
+/// to `D_FMT` with `%x`, `T_FMT` with `%X`, and/or `T_FMT_AMPM` with `%r`.
+/// Inlining these strings simplifies the implementation of the strftime parser in chrono.
+fn validate_and_fix_d_t_fmt(objects: &mut Vec<Object>) {
+    for object in objects.iter_mut() {
+        if object.name != "LC_TIME" {
+            continue;
+        }
+        let mut d_fmt = String::new();
+        let mut t_fmt = String::new();
+        let mut t_fmt_ampm = String::new();
+        for (key, value) in object.values.iter() {
+            match (key.as_str(), value.as_slice()) {
+                ("d_fmt", &[Value::String(ref value)]) => d_fmt = value.clone(),
+                ("t_fmt", &[Value::String(ref value)]) => t_fmt = value.clone(),
+                ("t_fmt_ampm", &[Value::String(ref value)]) => t_fmt_ampm = value.clone(),
+                _ => {}
+            }
+        }
+        for (key, ref mut value) in object.values.iter_mut() {
+            match (key.as_str(), value) {
+                ("d_t_fmt", vec) => {
+                    if let Value::String(ref val) = vec[0] {
+                        let d_t_fmt = val
+                            .replace("%x", &d_fmt)
+                            .replace("%X", &t_fmt)
+                            .replace("%r", &t_fmt_ampm);
+                        vec[0] = Value::String(d_t_fmt);
+                    }
+                }
+                _ => {}
+            }
         }
     }
 }
