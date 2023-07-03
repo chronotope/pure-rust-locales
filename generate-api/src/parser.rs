@@ -104,6 +104,7 @@ fn parse_str<'a, E: ParseError<&'a str>>(
         map_parser(
             alt((
                 take_while1(|c| c != escape_char && c != '"'),
+                map(preceded(char(escape_char), char('\n')), |_| ""),
                 preceded(char(escape_char), take(1_usize)),
             )),
             unescape_unicode,
