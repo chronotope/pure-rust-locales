@@ -32,7 +32,7 @@ impl From<&Value> for u8 {
 impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Value::Raw(x) | Value::String(x) => write!(f, "{:?}", x),
+            Value::Raw(x) | Value::String(x) => write!(f, "{}", x), // FIXME
             Value::Integer(x) => write!(f, "{:?}", x),
         }
     }

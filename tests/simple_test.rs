@@ -5,7 +5,7 @@ fn it_works() {
     use pure_rust_locales::fr_BE;
 
     assert_eq!(fr_BE::LC_TIME::D_FMT, "%d/%m/%y");
-    assert_eq!(fr_BE::LC_TIME::FIRST_WEEKDAY, 2_i64);
+    assert_eq!(fr_BE::LC_TIME::FIRST_WEEKDAY, Some(2_i64));
 }
 
 #[test]

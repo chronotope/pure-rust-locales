@@ -45,7 +45,7 @@ fn main() -> Result<()> {
         eprintln!("Calculating checksum...");
         let mut f = Sha256::default();
 
-        write!(f, "{}", generator::CodeGenerator(locales))?;
+        write!(f, "{}", generator::CodeGenerator::new(locales))?;
 
         let expected = f.finalize();
         eprintln!("expected: {:x}", expected);
@@ -63,7 +63,7 @@ fn main() -> Result<()> {
     } else {
         eprintln!("Writing to file `{}`...", lib_file.display());
         let mut f = BufWriter::new(fs::File::create(&lib_file)?);
-        write!(f, "{}", generator::CodeGenerator(locales))?;
+        write!(f, "{}", generator::CodeGenerator::new(locales))?;
     }
 
     Ok(())
