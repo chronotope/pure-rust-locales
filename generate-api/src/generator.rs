@@ -491,6 +491,13 @@ impl CodeGenerator {
             f,
             r#"
 
+            /// Locales matching the locales in `glibc`.
+            ///
+            /// Most locale names follow the syntax `language[_territory][@modifier]`.
+            /// The `@` is replaced with `_` in the `enum` variant names.
+            ///
+            /// License note: The Free Software Foundation does not claim any copyright interest in the locale
+            /// data of the GNU C Library; they believe it is not copyrightable.
             #[allow(non_camel_case_types,dead_code)]
             #[derive(Debug, Copy, Clone, PartialEq)]
             pub enum Locale {{
