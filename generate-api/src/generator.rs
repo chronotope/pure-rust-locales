@@ -499,13 +499,34 @@ impl CodeGenerator {
         f.indent(1);
 
         for (lang, norm) in self.normalized_langs.iter() {
+            let desc = match self
+                .by_language
+                .get(lang)
+                .and_then(|l| l.get("LC_IDENTIFICATION"))
+            {
+                Some(Category::Fields(fields)) => match fields.get("TITLE") {
+                    Some(Value::Literal(title)) => {
+                        let mut title = title.clone();
+                        if !title.ends_with('.') {
+                            title.push('.');
+                        }
+                        title
+                    }
+                    _ => match lang == "POSIX" {
+                        true => "POSIX Standard Locale.".to_string(),
+                        false => "".to_string(),
+                    },
+                },
+                _ => "".to_string(),
+            };
             write!(
                 f,
                 r#"
-                /// {lang}
+                /// `{lang}`: {desc}
                 {norm},
                 "#,
                 lang = lang,
+                desc = desc,
                 norm = norm,
             )?;
         }
