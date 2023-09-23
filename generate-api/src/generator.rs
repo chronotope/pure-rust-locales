@@ -496,10 +496,12 @@ impl CodeGenerator {
             /// Most locale names follow the syntax `language[_territory][@modifier]`.
             /// The `@` is replaced with `_` in the `enum` variant names.
             ///
+            /// The default locale is `POSIX`.
+            ///
             /// License note: The Free Software Foundation does not claim any copyright interest in the locale
             /// data of the GNU C Library; they believe it is not copyrightable.
             #[allow(non_camel_case_types,dead_code)]
-            #[derive(Debug, Copy, Clone, PartialEq)]
+            #[derive(Debug, Copy, Clone, Default, PartialEq)]
             pub enum Locale {{
             "#,
         )?;
@@ -526,16 +528,11 @@ impl CodeGenerator {
                 },
                 _ => "".to_string(),
             };
-            write!(
-                f,
-                r#"
-                /// `{lang}`: {desc}
-                {norm},
-                "#,
-                lang = lang,
-                desc = desc,
-                norm = norm,
-            )?;
+            write!(f, "\n/// `{}`: {}\n", lang, desc)?;
+            if lang == &"POSIX" {
+                writeln!(f, "\n#[default]\n")?;
+            }
+            writeln!(f, "\n{},\n", norm)?;
         }
 
         f.dedent(1);
