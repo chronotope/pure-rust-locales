@@ -501,7 +501,7 @@ impl CodeGenerator {
             /// License note: The Free Software Foundation does not claim any copyright interest in the locale
             /// data of the GNU C Library; they believe it is not copyrightable.
             #[allow(non_camel_case_types,dead_code)]
-            #[derive(Copy, Clone, Default, PartialEq)]
+            #[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
             pub enum Locale {{
             "#,
         )?;
