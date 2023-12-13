@@ -516,9 +516,9 @@ impl CodeGenerator {
             r#"
             }}
 
-            impl FromStr for Locale {{
+            impl core::str::FromStr for Locale {{
                 type Err = UnknownLocale;
-            
+
                 fn from_str(s: &str) -> Result<Self, Self::Err> {{
                     Locale::try_from(s)
                 }}
