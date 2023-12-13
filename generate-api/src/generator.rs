@@ -520,7 +520,7 @@ impl CodeGenerator {
                 type Err = UnknownLocale;
 
                 fn from_str(s: &str) -> Result<Self, Self::Err> {{
-                    core::convert::TryFrom<Locale>::try_from(s)
+                    core::convert::TryFrom::<&str>::try_from(s)
                 }}
             }}
 
