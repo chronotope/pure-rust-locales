@@ -892,8 +892,8 @@ pub mod af_ZA {
         pub const MON: &[&str] = &["Januarie", "Februarie", "Maart", "April", "Mei", "Junie", "Julie", "Augustus", "September", "Oktober", "November", "Desember"];
         /// `"%T"`
         pub const T_FMT: &str = "%T";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 1]);
     }
@@ -3739,8 +3739,8 @@ pub mod ar_MA {
         pub const MON: &[&str] = &["يناير", "فبراير", "مارس", "أبريل", "ماي", "يونيو", "يوليوز", "غشت", "شتنبر", "أكتوبر", "نونبر", "دجنبر"];
         /// `"%Z %H:%M:%S"`
         pub const T_FMT: &str = "%Z %H:%M:%S";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 1]);
     }
@@ -9374,8 +9374,8 @@ pub mod ca_ES {
         pub const MON: &[&str] = &["de gener", "de febrer", "de març", "d’abril", "de maig", "de juny", "de juliol", "d’agost", "de setembre", "d’octubre", "de novembre", "de desembre"];
         /// `"%T"`
         pub const T_FMT: &str = "%T";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 4])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 4]);
     }
@@ -24892,8 +24892,8 @@ pub mod gd_GB {
         pub const MON: &[&str] = &["dhen Fhaoilleach", "dhen Ghearran", "dhen Mhàrt", "dhen Ghiblean", "dhen Chèitean", "dhen Ògmhios", "dhen Iuchar", "dhen Lùnastal", "dhen t-Sultain", "dhen Dàmhair", "dhen t-Samhain", "dhen Dùbhlachd"];
         /// `"%r"`
         pub const T_FMT: &str = "%r";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 4])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 4]);
     }
@@ -28084,8 +28084,8 @@ pub mod ia_FR {
         pub const MON: &[&str] = &["januario", "februario", "martio", "april", "maio", "junio", "julio", "augusto", "septembre", "octobre", "novembre", "decembre"];
         /// `"%T"`
         pub const T_FMT: &str = "%T";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 4])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 4]);
     }
@@ -28774,8 +28774,8 @@ pub mod is_IS {
         pub const MON: &[&str] = &["janúar", "febrúar", "mars", "apríl", "maí", "júní", "júlí", "ágúst", "september", "október", "nóvember", "desember"];
         /// `"%T"`
         pub const T_FMT: &str = "%T";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 4])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 4]);
     }
@@ -45336,8 +45336,8 @@ pub mod so_KE {
         pub const MON: &[&str] = &["Bisha Koobaad", "Bisha Labaad", "Bisha Saddexaad", "Bisha Afraad", "Bisha Shanaad", "Bisha Lixaad", "Bisha Todobaad", "Bisha Sideedaad", "Bisha Sagaalaad", "Bisha Tobnaad", "Bisha Kow iyo Tobnaad", "Bisha Laba iyo Tobnaad"];
         /// `"%T"`
         pub const T_FMT: &str = "%T";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 1]);
     }
@@ -47901,8 +47901,8 @@ pub mod ta_LK {
         pub const MON: &[&str] = &["ஜனவரி", "பிப\u{bcd}ரவரி", "ம\u{bbe}ர\u{bcd}ச\u{bcd}", "ஏப\u{bcd}ரல\u{bcd}", "மே", "ஜூன\u{bcd}", "ஜூலை", "ஆகஸ\u{bcd}ட\u{bcd}", "செப\u{bcd}டம\u{bcd}பர\u{bcd}", "அக\u{bcd}டோபர\u{bcd}", "நவம\u{bcd}பர\u{bcd}", "டிசம\u{bcd}பர\u{bcd}"];
         /// `"%H:%M:%S %Z"`
         pub const T_FMT: &str = "%H:%M:%S %Z";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 1]);
     }
@@ -54753,8 +54753,8 @@ pub mod zh_SG {
         pub const MON: &[&str] = &["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
         /// `"%H时%M分%S秒 %Z"`
         pub const T_FMT: &str = "%H时%M分%S秒 %Z";
-        /// `""`
-        pub const T_FMT_AMPM: &str = "";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
         pub const WEEK: Option<&[i64]> = Some(&[7, 19971130, 1]);
     }

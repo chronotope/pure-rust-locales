@@ -74,7 +74,7 @@ fn validate_and_fix(objects: &mut [Object]) {
     validate_and_fix_d_t_fmt(objects);
 }
 
-/// Add a `T_FMT_AMPM` item if it is missing (happens for 3 locales).
+/// Add a `T_FMT_AMPM` item if it is missing or empty.
 ///
 /// If the locale has non-empty values for `AM_PM` we assume the correct string to be the same as
 /// for POSIX: `%l:%M:%S %p`.
@@ -97,11 +97,22 @@ fn validate_and_fix_t_fmt_ampm(objects: &mut [Object]) {
             }
         }
         if !found_t_fmt_ampm {
+            // Insert `T_FMT_AMPM` if it is missing
             let value = match am_pm_empty {
                 true => vec![Value::String(String::new())],
                 false => vec![Value::String("%l:%M:%S %p".to_string())],
             };
             object.values.push(("t_fmt_ampm".to_string(), value));
+        } else if !am_pm_empty {
+            // Update `T_FMT_AMPM` if it is empty and we do have a value for `AM_PM`.
+            for (key, value) in object.values.iter_mut() {
+                match (key.as_str(), value.as_slice()) {
+                    ("t_fmt_ampm", &[Value::String(ref t_fmt_ampm)]) if t_fmt_ampm.is_empty() => {
+                        *value = vec![Value::String("%l:%M:%S %p".to_string())];
+                    }
+                    _ => {}
+                }
+            }
         }
     }
 }
