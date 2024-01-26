@@ -136,6 +136,9 @@ fn validate_and_fix_d_t_fmt(objects: &mut [Object]) {
                 _ => {}
             }
         }
+        if t_fmt_ampm.is_empty() {
+            t_fmt_ampm = "%T".to_string();
+        }
         for (key, ref mut value) in object.values.iter_mut() {
             if let ("d_t_fmt", vec) = (key.as_str(), value) {
                 if let Value::String(ref val) = vec[0] {

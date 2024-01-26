@@ -27923,8 +27923,8 @@ pub mod hy_AM {
         pub const DAY: &[&str] = &["Կիրակի", "Երկուշաբթի", "Երեքշաբթի", "Չորեքշաբթի", "Հինգշաբթի", "Ուրբաթ", "Շաբաթ"];
         /// `"%m/%d/%y"`
         pub const D_FMT: &str = "%m/%d/%y";
-        /// `"%a %d %b %Y  %Z"`
-        pub const D_T_FMT: &str = "%a %d %b %Y  %Z";
+        /// `"%a %d %b %Y %T %Z"`
+        pub const D_T_FMT: &str = "%a %d %b %Y %T %Z";
         /// `None`
         pub const ERA: Option<&[&str]> = None;
         /// `None`
@@ -28268,8 +28268,8 @@ pub mod id_ID {
         pub const DAY: &[&str] = &["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
         /// `"%d/%m/%y"`
         pub const D_FMT: &str = "%d/%m/%y";
-        /// `"%a %d %b %Y  %Z"`
-        pub const D_T_FMT: &str = "%a %d %b %Y  %Z";
+        /// `"%a %d %b %Y %T %Z"`
+        pub const D_T_FMT: &str = "%a %d %b %Y %T %Z";
         /// `None`
         pub const ERA: Option<&[&str]> = None;
         /// `None`
