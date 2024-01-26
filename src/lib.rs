@@ -1235,8 +1235,8 @@ pub mod ak_GH {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Sanda-Ɔpɛpɔn", "Kwakwar-Ɔgyefuo", "Ebɔw-Ɔbenem", "Ebɔbira-Oforisuo", "Esusow Aketseaba-Kɔtɔnimba", "Obirade-Ayɛwohomumu", "Ayɛwoho-Kitawonsa", "Difuu-Ɔsandaa", "Fankwa-Ɛbɔ", "Ɔbɛsɛ-Ahinime", "Ɔberɛfɛw-Obubuo", "Mumu-Ɔpɛnimba"]`
         pub const MON: &[&str] = &["Sanda-Ɔpɛpɔn", "Kwakwar-Ɔgyefuo", "Ebɔw-Ɔbenem", "Ebɔbira-Oforisuo", "Esusow Aketseaba-Kɔtɔnimba", "Obirade-Ayɛwohomumu", "Ayɛwoho-Kitawonsa", "Difuu-Ɔsandaa", "Fankwa-Ɛbɔ", "Ɔbɛsɛ-Ahinime", "Ɔberɛfɛw-Obubuo", "Mumu-Ɔpɛnimba"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -10024,8 +10024,8 @@ pub mod chr_US {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["ᎤᏃᎸᏔᏅ", "ᎧᎦᎵ", "ᎠᏅᏱ", "ᎧᏬᏂ", "ᎠᏂᏍᎬᏘ", "ᏕᎭᎷᏱ", "ᎫᏰᏉᏂ", "ᎦᎶᏂ", "ᏚᎵᏍᏗ", "ᏚᏂᏅᏗ", "ᏅᏓᏕᏆ", "ᎥᏍᎩᏱ"]`
         pub const MON: &[&str] = &["ᎤᏃᎸᏔᏅ", "ᎧᎦᎵ", "ᎠᏅᏱ", "ᎧᏬᏂ", "ᎠᏂᏍᎬᏘ", "ᏕᎭᎷᏱ", "ᎫᏰᏉᏂ", "ᎦᎶᏂ", "ᏚᎵᏍᏗ", "ᏚᏂᏅᏗ", "ᏅᏓᏕᏆ", "ᎥᏍᎩᏱ"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -13582,8 +13582,8 @@ pub mod el_CY {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"]`
         pub const MON: &[&str] = &["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -13784,8 +13784,8 @@ pub mod el_GR {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"]`
         pub const MON: &[&str] = &["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 4])`
@@ -14574,8 +14574,8 @@ pub mod en_CA {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]`
         pub const MON: &[&str] = &["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -16797,8 +16797,8 @@ pub mod en_US {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]`
         pub const MON: &[&str] = &["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -22774,8 +22774,8 @@ pub mod fil_PH {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Enero", "Pebrero", "Marso", "Abril", "Mayo", "Hunyo", "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"]`
         pub const MON: &[&str] = &["Enero", "Pebrero", "Marso", "Abril", "Mayo", "Hunyo", "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -24890,8 +24890,8 @@ pub mod gd_GB {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["dhen Fhaoilleach", "dhen Ghearran", "dhen Mhàrt", "dhen Ghiblean", "dhen Chèitean", "dhen Ògmhios", "dhen Iuchar", "dhen Lùnastal", "dhen t-Sultain", "dhen Dàmhair", "dhen t-Samhain", "dhen Dùbhlachd"]`
         pub const MON: &[&str] = &["dhen Fhaoilleach", "dhen Ghearran", "dhen Mhàrt", "dhen Ghiblean", "dhen Chèitean", "dhen Ògmhios", "dhen Iuchar", "dhen Lùnastal", "dhen t-Sultain", "dhen Dàmhair", "dhen t-Samhain", "dhen Dùbhlachd"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%l:%M:%S %p"`
+        pub const T_FMT: &str = "%l:%M:%S %p";
         /// `"%l:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%l:%M:%S %p";
         /// `Some(&[7, 19971130, 4])`
@@ -26046,8 +26046,8 @@ pub mod ha_NG {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Janairu", "Faburairu", "Maris", "Afirilu", "Mayu", "Yuni", "Yuli", "Agusta", "Satumba", "Oktoba", "Nuwamba", "Disamba"]`
         pub const MON: &[&str] = &["Janairu", "Faburairu", "Maris", "Afirilu", "Mayu", "Yuni", "Yuli", "Agusta", "Satumba", "Oktoba", "Nuwamba", "Disamba"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -27939,8 +27939,8 @@ pub mod hy_AM {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["հունվարի", "փետրվարի", "մարտի", "ապրիլի", "մայիսի", "հունիսի", "հուլիսի", "օգոստոսի", "սեպտեմբերի", "հոկտեմբերի", "նոյեմբերի", "դեկտեմբերի"]`
         pub const MON: &[&str] = &["հունվարի", "փետրվարի", "մարտի", "ապրիլի", "մայիսի", "հունիսի", "հուլիսի", "օգոստոսի", "սեպտեմբերի", "հոկտեմբերի", "նոյեմբերի", "դեկտեմբերի"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%T"`
+        pub const T_FMT: &str = "%T";
         /// `""`
         pub const T_FMT_AMPM: &str = "";
         /// `Some(&[7, 19971130, 1])`
@@ -28427,8 +28427,8 @@ pub mod ig_NG {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Jenụwarị", "Febrụwarị", "Maachị", "Eprel", "Mee", "Juun", "Julaị", "Ọgọọst", "Septemba", "Ọktoba", "Novemba", "Disemba"]`
         pub const MON: &[&str] = &["Jenụwarị", "Febrụwarị", "Maachị", "Eprel", "Mee", "Juun", "Julaị", "Ọgọọst", "Septemba", "Ọktoba", "Novemba", "Disemba"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -28570,8 +28570,8 @@ pub mod ik_CA {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Siqiññaatchiaq", "Siqiññaasrugruk", "Paniqsiqsiivik", "Qilġich Tatqiat", "Suppivik", "Iġñivik", "Itchavik", "Tiññivik", "Amiġaiqsivik", "Sikkuvik", "Nippivik", "Siqiñġiḷaq"]`
         pub const MON: &[&str] = &["Siqiññaatchiaq", "Siqiññaasrugruk", "Paniqsiqsiivik", "Qilġich Tatqiat", "Suppivik", "Iġñivik", "Itchavik", "Tiññivik", "Amiġaiqsivik", "Sikkuvik", "Nippivik", "Siqiñġiḷaq"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -29335,8 +29335,8 @@ pub mod iu_CA {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["ᔮᓄᐊᓕ", "ᕕᕗᐊᓕ", "ᒪᔅᓯ", "ᐃᐳᓗ", "ᒪᐃ", "ᔪᓂ", "ᔪᓚᐃ", "ᐊᒋᓯ", "ᓯᑎᕙ", "ᐊᑦᑐᕙ", "ᓄᕕᕙ", "ᑎᓯᕝᕙ"]`
         pub const MON: &[&str] = &["ᔮᓄᐊᓕ", "ᕕᕗᐊᓕ", "ᒪᔅᓯ", "ᐃᐳᓗ", "ᒪᐃ", "ᔪᓂ", "ᔪᓚᐃ", "ᐊᒋᓯ", "ᓯᑎᕙ", "ᐊᑦᑐᕙ", "ᓄᕕᕙ", "ᑎᓯᕝᕙ"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -36904,8 +36904,8 @@ pub mod nan_TW_latin {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["1goe\u{30d}h", "2goe\u{30d}h", "3goe\u{30d}h", "4goe\u{30d}h", "5goe\u{30d}h", "6goe\u{30d}h", "7goe\u{30d}h", "8goe\u{30d}h", "9goe\u{30d}h", "10goe\u{30d}h", "11goe\u{30d}h", "12goe\u{30d}h"]`
         pub const MON: &[&str] = &["1goe\u{30d}h", "2goe\u{30d}h", "3goe\u{30d}h", "4goe\u{30d}h", "5goe\u{30d}h", "6goe\u{30d}h", "7goe\u{30d}h", "8goe\u{30d}h", "9goe\u{30d}h", "10goe\u{30d}h", "11goe\u{30d}h", "12goe\u{30d}h"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -43981,8 +43981,8 @@ pub mod shs_CA {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Pellkwet\u{313}min", "Pelctsipwen\u{313}ten", "Pellsqépts", "Peslléwten", "Pell7ell7é7llqten", "Pelltspéntsk", "Pelltqwelq\u{313}wél\u{313}t", "Pellct\u{313}éxel\u{313}cten", "Pesqelqlélten", "Pesllwélsten", "Pellc7ell7é7llcwten\u{313}", "Pelltetétq\u{313}em"]`
         pub const MON: &[&str] = &["Pellkwet\u{313}min", "Pelctsipwen\u{313}ten", "Pellsqépts", "Peslléwten", "Pell7ell7é7llqten", "Pelltspéntsk", "Pelltqwelq\u{313}wél\u{313}t", "Pellct\u{313}éxel\u{313}cten", "Pesqelqlélten", "Pesllwélsten", "Pellc7ell7é7llcwten\u{313}", "Pelltetétq\u{313}em"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -44923,8 +44923,8 @@ pub mod sm_WS {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Ianuari", "Fepuari", "Mati", "Aperila", "Me", "Iuni", "Iulai", "Auguso", "Setema", "Oketopa", "Novema", "Tesema"]`
         pub const MON: &[&str] = &["Ianuari", "Fepuari", "Mati", "Aperila", "Me", "Iuni", "Iulai", "Auguso", "Setema", "Oketopa", "Novema", "Tesema"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%T"`
+        pub const T_FMT: &str = "%T";
         /// `""`
         pub const T_FMT_AMPM: &str = "";
         /// `None`
@@ -49659,8 +49659,8 @@ pub mod tl_PH {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Enero", "Pebrero", "Marso", "Abril", "Mayo", "Hunyo", "Hulyo", "Agosto", "Septiyembre", "Oktubre", "Nobiyembre", "Disyembre"]`
         pub const MON: &[&str] = &["Enero", "Pebrero", "Marso", "Abril", "Mayo", "Hunyo", "Hulyo", "Agosto", "Septiyembre", "Oktubre", "Nobiyembre", "Disyembre"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`
@@ -50206,8 +50206,8 @@ pub mod tpi_PG {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Janueri", "Februeri", "Mas", "Epril", "Me", "Jun", "Julai", "Ogas", "Septemba", "Oktoba", "Novemba", "Desemba"]`
         pub const MON: &[&str] = &["Janueri", "Februeri", "Mas", "Epril", "Me", "Jun", "Julai", "Ogas", "Septemba", "Oktoba", "Novemba", "Desemba"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p %Z"`
+        pub const T_FMT: &str = "%I:%M:%S %p %Z";
         /// `"%I:%M:%S %p %Z"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p %Z";
         /// `Some(&[7, 19971130, 1])`
@@ -53809,8 +53809,8 @@ pub mod yo_NG {
         pub const FIRST_WORKDAY: Option<i64> = None;
         /// `&["Oṣù Ṣẹ\u{301}rẹ\u{301}", "Oṣù Èrèlè", "Oṣù Ẹrẹ\u{300}nà", "Oṣù Ìgbé", "Oṣù Ẹ\u{300}bibi", "Oṣù Òkúdu", "Oṣù Agẹmọ", "Oṣù Ògún", "Oṣù Owewe", "Oṣù Ọ\u{300}wàrà", "Oṣù Bélú", "Oṣù Ọ\u{300}pẹ\u{300}"]`
         pub const MON: &[&str] = &["Oṣù Ṣẹ\u{301}rẹ\u{301}", "Oṣù Èrèlè", "Oṣù Ẹrẹ\u{300}nà", "Oṣù Ìgbé", "Oṣù Ẹ\u{300}bibi", "Oṣù Òkúdu", "Oṣù Agẹmọ", "Oṣù Ògún", "Oṣù Owewe", "Oṣù Ọ\u{300}wàrà", "Oṣù Bélú", "Oṣù Ọ\u{300}pẹ\u{300}"];
-        /// `"%r"`
-        pub const T_FMT: &str = "%r";
+        /// `"%I:%M:%S %p"`
+        pub const T_FMT: &str = "%I:%M:%S %p";
         /// `"%I:%M:%S %p"`
         pub const T_FMT_AMPM: &str = "%I:%M:%S %p";
         /// `Some(&[7, 19971130, 1])`

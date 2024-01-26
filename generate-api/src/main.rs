@@ -119,6 +119,7 @@ fn validate_and_fix_t_fmt_ampm(objects: &mut [Object]) {
 
 /// In some locales `D_T_FMT` refers to other items:
 /// to `D_FMT` with `%x`, `T_FMT` with `%X`, and/or `T_FMT_AMPM` with `%r`.
+/// In the same way `T_FMT` can refer `T_FMT_AMPM` with `%r`.
 /// Inlining these strings simplifies the implementation of the strftime parser in chrono.
 fn validate_and_fix_d_t_fmt(objects: &mut [Object]) {
     for object in objects.iter_mut() {
@@ -140,13 +141,13 @@ fn validate_and_fix_d_t_fmt(objects: &mut [Object]) {
             t_fmt_ampm = "%T".to_string();
         }
         for (key, ref mut value) in object.values.iter_mut() {
-            if let ("d_t_fmt", vec) = (key.as_str(), value) {
+            if let ("d_t_fmt", vec) | ("t_fmt", vec) = (key.as_str(), value) {
                 if let Value::String(ref val) = vec[0] {
-                    let d_t_fmt = val
+                    let fmt = val
                         .replace("%x", &d_fmt)
                         .replace("%X", &t_fmt)
                         .replace("%r", &t_fmt_ampm);
-                    vec[0] = Value::String(d_t_fmt);
+                    vec[0] = Value::String(fmt);
                 }
             }
         }
