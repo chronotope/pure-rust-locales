@@ -24,7 +24,7 @@ fn main() -> Result<()> {
         let file_name = entry.file_name();
         let lang = file_name.to_str().unwrap();
 
-        if parser::parse_lang(&lang).is_err() {
+        if parser::parse_lang(lang).is_err() {
             // parse only files for which the name matches a language
             // example: wa_BE@euro
             continue;
@@ -41,7 +41,7 @@ fn main() -> Result<()> {
 
     let lib_file = metadata.workspace_root.join("src").join("lib.rs");
 
-    if matches!(env::var("CHECK"), Ok(_)) {
+    if env::var("CHECK").is_ok() {
         eprintln!("Calculating checksum...");
         let mut f = Sha256::default();
 
@@ -69,7 +69,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn validate_and_fix(objects: &mut Vec<Object>) {
+fn validate_and_fix(objects: &mut [Object]) {
     validate_and_fix_t_fmt_ampm(objects);
     validate_and_fix_d_t_fmt(objects);
 }
@@ -80,7 +80,7 @@ fn validate_and_fix(objects: &mut Vec<Object>) {
 /// for POSIX: `%l:%M:%S %p`.
 /// If the locale has empty values for `AM_PM` we set `T_FMT_AMPM` to an empty value, similar to
 /// other locales that don't have a 12-hour clock format.
-fn validate_and_fix_t_fmt_ampm(objects: &mut Vec<Object>) {
+fn validate_and_fix_t_fmt_ampm(objects: &mut [Object]) {
     for object in objects.iter_mut() {
         if object.name != "LC_TIME" {
             continue;
@@ -109,7 +109,7 @@ fn validate_and_fix_t_fmt_ampm(objects: &mut Vec<Object>) {
 /// In some locales `D_T_FMT` refers to other items:
 /// to `D_FMT` with `%x`, `T_FMT` with `%X`, and/or `T_FMT_AMPM` with `%r`.
 /// Inlining these strings simplifies the implementation of the strftime parser in chrono.
-fn validate_and_fix_d_t_fmt(objects: &mut Vec<Object>) {
+fn validate_and_fix_d_t_fmt(objects: &mut [Object]) {
     for object in objects.iter_mut() {
         if object.name != "LC_TIME" {
             continue;
@@ -126,17 +126,14 @@ fn validate_and_fix_d_t_fmt(objects: &mut Vec<Object>) {
             }
         }
         for (key, ref mut value) in object.values.iter_mut() {
-            match (key.as_str(), value) {
-                ("d_t_fmt", vec) => {
-                    if let Value::String(ref val) = vec[0] {
-                        let d_t_fmt = val
-                            .replace("%x", &d_fmt)
-                            .replace("%X", &t_fmt)
-                            .replace("%r", &t_fmt_ampm);
-                        vec[0] = Value::String(d_t_fmt);
-                    }
+            if let ("d_t_fmt", vec) = (key.as_str(), value) {
+                if let Value::String(ref val) = vec[0] {
+                    let d_t_fmt = val
+                        .replace("%x", &d_fmt)
+                        .replace("%X", &t_fmt)
+                        .replace("%r", &t_fmt_ampm);
+                    vec[0] = Value::String(d_t_fmt);
                 }
-                _ => {}
             }
         }
     }
