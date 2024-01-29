@@ -253,11 +253,9 @@ impl CodeGenerator {
         let mut normalized_langs = BTreeMap::<Lang, String>::new();
 
         for (lang, objects) in objects.iter() {
-            normalized_langs.insert(lang.to_string(), lang.replace("@", "_"));
+            normalized_langs.insert(lang.to_string(), lang.replace('@', "_"));
 
-            let lang_categories = by_language
-                .entry(lang.to_string())
-                .or_insert(BTreeMap::new());
+            let lang_categories = by_language.entry(lang.to_string()).or_default();
 
             for object in objects.iter() {
                 if object.name == "LC_COLLATE"
@@ -278,7 +276,7 @@ impl CodeGenerator {
                                 parser::Value::String(x) => {
                                     lang_categories.insert(
                                         object.name.clone(),
-                                        Category::Link(x.replace("@", "_"), object.name.clone()),
+                                        Category::Link(x.replace('@', "_"), object.name.clone()),
                                     );
                                 }
                                 x => panic!("unexpected value for key {}: {:?}", key, x),
@@ -291,9 +289,7 @@ impl CodeGenerator {
 
                 let mut fields = BTreeMap::<Field, Value>::new();
 
-                let cat_field_meta = field_metadata
-                    .entry(object.name.clone())
-                    .or_insert(BTreeMap::new());
+                let cat_field_meta = field_metadata.entry(object.name.clone()).or_default();
 
                 for (key, group) in &object
                     .values
@@ -303,13 +299,12 @@ impl CodeGenerator {
                     .group_by(|x| x.0.clone())
                 {
                     let key = key
-                        .replace("'", "")
-                        .replace("\"", "")
-                        .replace("-", "_")
-                        .replace("=", "eq")
-                        .replace("<", "lt")
+                        .replace(['\'', '\"'], "")
+                        .replace('-', "_")
+                        .replace('=', "eq")
+                        .replace('<', "lt")
                         .replace("..", "dotdot")
-                        .replace("2", "two")
+                        .replace('2', "two")
                         .to_uppercase();
                     let group: Vec<_> = group.map(|x| &x.1).collect();
 
@@ -341,8 +336,7 @@ impl CodeGenerator {
                         fields.insert(key, Value::Array(vec));
                     } else if group
                         .iter()
-                        .map(|x| x.iter().map(u8::from))
-                        .flatten()
+                        .flat_map(|x| x.iter().map(u8::from))
                         .all_equal()
                     {
                         meta.mark_array_2d();
@@ -384,7 +378,7 @@ impl CodeGenerator {
                     Category::Link(_, _) => {}
                     Category::Fields(fields) => {
                         for (field, meta) in all_fields {
-                            if let None = fields.get(field) {
+                            if fields.get(field).is_none() {
                                 fields.insert(field.clone(), Value::Empty);
                                 meta.make_optional();
                             }
@@ -529,7 +523,7 @@ impl CodeGenerator {
                 _ => "".to_string(),
             };
             write!(f, "\n/// `{}`: {}\n", lang, desc)?;
-            if lang == &"POSIX" {
+            if lang == "POSIX" {
                 writeln!(f, "\n#[default]\n")?;
             }
             writeln!(f, "\n{},\n", norm)?;
