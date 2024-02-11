@@ -55115,10 +55115,9 @@ pub mod zu_ZA {
 /// License note: The Free Software Foundation does not claim any copyright interest in the locale
 /// data of the GNU C Library; they believe it is not copyrightable.
 #[allow(non_camel_case_types,dead_code)]
-#[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Locale {
     /// `POSIX`: POSIX Standard Locale.
-    #[default]
     POSIX,
     /// `aa_DJ`: Afar language locale for Djibouti (Cadu/Laaqo Dialects).
     aa_DJ,
@@ -56837,4 +56836,10 @@ macro_rules! locale_match {
             $crate::Locale::zu_ZA => $crate::zu_ZA::$($item)::+,
         }
     }}
+}
+
+impl Default for Locale {
+    fn default() -> Self {
+        Locale::POSIX
+    }
 }
