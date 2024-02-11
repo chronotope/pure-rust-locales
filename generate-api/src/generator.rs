@@ -477,6 +477,17 @@ impl CodeGenerator {
 
         self.generate_variants(f)?;
 
+        write!(
+            f,
+            r#"
+
+            impl Default for Locale {{
+                fn default() -> Self {{
+                    Locale::POSIX
+                }}
+            }}
+            "#,
+        )?;
         Ok(())
     }
 
@@ -495,7 +506,7 @@ impl CodeGenerator {
             /// License note: The Free Software Foundation does not claim any copyright interest in the locale
             /// data of the GNU C Library; they believe it is not copyrightable.
             #[allow(non_camel_case_types,dead_code)]
-            #[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
+            #[derive(Copy, Clone, PartialEq, Eq, Hash)]
             pub enum Locale {{
             "#,
         )?;
@@ -523,9 +534,6 @@ impl CodeGenerator {
                 _ => "".to_string(),
             };
             write!(f, "\n/// `{}`: {}\n", lang, desc)?;
-            if lang == "POSIX" {
-                writeln!(f, "\n#[default]\n")?;
-            }
             writeln!(f, "\n{},\n", norm)?;
         }
 
