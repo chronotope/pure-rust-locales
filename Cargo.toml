@@ -17,3 +17,9 @@ rust-version = "1.56.0"
 members = [
     "generate-api",
 ]
+
+[features]
+defmt = ["dep:defmt"]
+
+[dependencies]
+defmt = { version = "1.0.1", optional = true }
