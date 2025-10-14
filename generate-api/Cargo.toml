@@ -3,8 +3,7 @@ name = "generate-api"
 version = "0.0.0"
 authors = ["Cecile Tonglet <cecile.tonglet@cecton.com>"]
 edition = "2018"
-
-# DO NOT PUBLISH!
+publish = false
 
 [dependencies]
 anyhow = "1.0"
