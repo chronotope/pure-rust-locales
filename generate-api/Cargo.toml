@@ -11,4 +11,4 @@ cargo_metadata = "0.12"
 indenter = { version = "0.3", features = ["std"] }
 itertools = "0.8"
 nom = "5.0"
-sha2 = "0.9"
+sha2 = "0.10"
