@@ -7,7 +7,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0"
-cargo_metadata = "0.12"
+cargo_metadata = "0.23"
 indenter = { version = "0.3", features = ["std"] }
 itertools = "0.8"
 nom = "5.0"
