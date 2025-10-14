@@ -3,13 +3,12 @@ name = "generate-api"
 version = "0.0.0"
 authors = ["Cecile Tonglet <cecile.tonglet@cecton.com>"]
 edition = "2018"
-
-# DO NOT PUBLISH!
+publish = false
 
 [dependencies]
 anyhow = "1.0"
-cargo_metadata = "0.12"
+cargo_metadata = "0.23"
 indenter = { version = "0.3", features = ["std"] }
 itertools = "0.8"
 nom = "5.0"
-sha2 = "0.9"
+sha2 = "0.10"

@@ -292,7 +292,7 @@ pub fn parse(input: &str) -> Result<Vec<Object>> {
 pub fn parse_lang(input: &str) -> Result<(&str, Option<&str>, Option<&str>)> {
     fn inner_parser<'a, E: ParseError<&'a str>>(
         i: &'a str,
-    ) -> IResult<&'a str, (&str, Option<&str>, Option<&str>), E> {
+    ) -> IResult<&'a str, (&'a str, Option<&'a str>, Option<&'a str>), E> {
         let (i, lang) = verify(alpha1, |x: &str| x != "translit")(i)?;
         let (i, country) = opt(preceded(char('_'), alpha1))(i)?;
         let (i, variant) = all_consuming(opt(preceded(char('@'), alpha1)))(i)?;
