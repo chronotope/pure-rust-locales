@@ -30595,10 +30595,10 @@ pub mod kn_IN {
     pub use super::hi_IN::LC_NUMERIC;
     pub use super::hi_IN::LC_TELEPHONE;
     pub mod LC_TIME {
-        /// `&["ರ", "ಸೋ", "ಮಂ", "ಬು", "ಗು", "ಶು", "ಶ"]`
-        pub const ABDAY: &[&str] = &["ರ", "ಸೋ", "ಮಂ", "ಬು", "ಗು", "ಶು", "ಶ"];
-        /// `&["ಜನ", "ಫ\u{cc6}ಬ\u{ccd}ರ", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}", "ಮೇ", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲೈ", "ಆ", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂ", "ಅಕ\u{ccd}ಟೋ", "ನವ\u{cc6}ಂ", "ಡ\u{cbf}ಸ\u{cc6}ಂ"]`
-        pub const ABMON: &[&str] = &["ಜನ", "ಫ\u{cc6}ಬ\u{ccd}ರ", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}", "ಮೇ", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲೈ", "ಆ", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂ", "ಅಕ\u{ccd}ಟೋ", "ನವ\u{cc6}ಂ", "ಡ\u{cbf}ಸ\u{cc6}ಂ"];
+        /// `&["ರ", "ಸ\u{ccb}", "ಮಂ", "ಬು", "ಗು", "ಶು", "ಶ"]`
+        pub const ABDAY: &[&str] = &["ರ", "ಸ\u{ccb}", "ಮಂ", "ಬು", "ಗು", "ಶು", "ಶ"];
+        /// `&["ಜನ", "ಫ\u{cc6}ಬ\u{ccd}ರ", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}", "ಮ\u{cc7}", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲ\u{cc8}", "ಆ", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂ", "ಅಕ\u{ccd}ಟ\u{ccb}", "ನವ\u{cc6}ಂ", "ಡ\u{cbf}ಸ\u{cc6}ಂ"]`
+        pub const ABMON: &[&str] = &["ಜನ", "ಫ\u{cc6}ಬ\u{ccd}ರ", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}", "ಮ\u{cc7}", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲ\u{cc8}", "ಆ", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂ", "ಅಕ\u{ccd}ಟ\u{ccb}", "ನವ\u{cc6}ಂ", "ಡ\u{cbf}ಸ\u{cc6}ಂ"];
         /// `None`
         pub const AB_ALT_MON: Option<&[&str]> = None;
         /// `None`
@@ -30611,8 +30611,8 @@ pub mod kn_IN {
         pub const CAL_DIRECTION: Option<i64> = None;
         /// `None`
         pub const DATE_FMT: Option<&str> = None;
-        /// `&["ರವ\u{cbf}ವಾರ", "ಸೋಮವಾರ", "ಮಂಗಳವಾರ", "ಬುಧವಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರವಾರ", "ಶನ\u{cbf}ವಾರ"]`
-        pub const DAY: &[&str] = &["ರವ\u{cbf}ವಾರ", "ಸೋಮವಾರ", "ಮಂಗಳವಾರ", "ಬುಧವಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರವಾರ", "ಶನ\u{cbf}ವಾರ"];
+        /// `&["ರವ\u{cbf}ವಾರ", "ಸ\u{ccb}ಮವಾರ", "ಮಂಗಳವಾರ", "ಬುಧವಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರವಾರ", "ಶನ\u{cbf}ವಾರ"]`
+        pub const DAY: &[&str] = &["ರವ\u{cbf}ವಾರ", "ಸ\u{ccb}ಮವಾರ", "ಮಂಗಳವಾರ", "ಬುಧವಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರವಾರ", "ಶನ\u{cbf}ವಾರ"];
         /// `"%-d/%-m/%y"`
         pub const D_FMT: &str = "%-d/%-m/%y";
         /// `"%A %d %b %Y %I:%M:%S %p %Z"`
@@ -30629,8 +30629,8 @@ pub mod kn_IN {
         pub const FIRST_WEEKDAY: Option<i64> = None;
         /// `None`
         pub const FIRST_WORKDAY: Option<i64> = None;
-        /// `&["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}", "ಮೇ", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲೈ", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}", "ಅಕ\u{ccd}ಟೋಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"]`
-        pub const MON: &[&str] = &["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}", "ಮೇ", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲೈ", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}", "ಅಕ\u{ccd}ಟೋಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"];
+        /// `&["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}", "ಮ\u{cc7}", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲ\u{cc8}", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}", "ಅಕ\u{ccd}ಟ\u{ccb}ಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"]`
+        pub const MON: &[&str] = &["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}", "ಮ\u{cc7}", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲ\u{cc8}", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}", "ಅಕ\u{ccd}ಟ\u{ccb}ಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"];
         /// `"%I:%M:%S %p %Z"`
         pub const T_FMT: &str = "%I:%M:%S %p %Z";
         /// `"%I:%M:%S %p %Z"`
@@ -48006,10 +48006,10 @@ pub mod tcy_IN {
     pub use super::hi_IN::LC_NUMERIC;
     pub use super::hi_IN::LC_TELEPHONE;
     pub mod LC_TIME {
-        /// `&["ಐ", "ಸೋ", "ಅಂ", "ಬು", "ಗು", "ಶು", "ಶ"]`
-        pub const ABDAY: &[&str] = &["ಐ", "ಸೋ", "ಅಂ", "ಬು", "ಗು", "ಶು", "ಶ"];
-        /// `&["ಜ", "ಫ\u{cc6}", "ಮಾ", "ಏ", "ಮೇ", "ಜ\u{cc2}", "ಜು", "ಆ", "ಸ\u{cc6}", "ಅ", "ನ", "ಡ\u{cbf}"]`
-        pub const ABMON: &[&str] = &["ಜ", "ಫ\u{cc6}", "ಮಾ", "ಏ", "ಮೇ", "ಜ\u{cc2}", "ಜು", "ಆ", "ಸ\u{cc6}", "ಅ", "ನ", "ಡ\u{cbf}"];
+        /// `&["ಐ", "ಸ\u{ccb}", "ಅಂ", "ಬು", "ಗು", "ಶು", "ಶ"]`
+        pub const ABDAY: &[&str] = &["ಐ", "ಸ\u{ccb}", "ಅಂ", "ಬು", "ಗು", "ಶು", "ಶ"];
+        /// `&["ಜ", "ಫ\u{cc6}", "ಮಾ", "ಏ", "ಮ\u{cc7}", "ಜ\u{cc2}", "ಜು", "ಆ", "ಸ\u{cc6}", "ಅ", "ನ", "ಡ\u{cbf}"]`
+        pub const ABMON: &[&str] = &["ಜ", "ಫ\u{cc6}", "ಮಾ", "ಏ", "ಮ\u{cc7}", "ಜ\u{cc2}", "ಜು", "ಆ", "ಸ\u{cc6}", "ಅ", "ನ", "ಡ\u{cbf}"];
         /// `None`
         pub const AB_ALT_MON: Option<&[&str]> = None;
         /// `None`
@@ -48022,8 +48022,8 @@ pub mod tcy_IN {
         pub const CAL_DIRECTION: Option<i64> = None;
         /// `None`
         pub const DATE_FMT: Option<&str> = None;
-        /// `&["ಐಥಾರ", "ಸೋಮಾರ", "ಅಂಗರ\u{cc6}", "ಬುಧಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರರ", "ಶನ\u{cbf}ವಾರ"]`
-        pub const DAY: &[&str] = &["ಐಥಾರ", "ಸೋಮಾರ", "ಅಂಗರ\u{cc6}", "ಬುಧಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರರ", "ಶನ\u{cbf}ವಾರ"];
+        /// `&["ಐಥಾರ", "ಸ\u{ccb}ಮಾರ", "ಅಂಗರ\u{cc6}", "ಬುಧಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರರ", "ಶನ\u{cbf}ವಾರ"]`
+        pub const DAY: &[&str] = &["ಐಥಾರ", "ಸ\u{ccb}ಮಾರ", "ಅಂಗರ\u{cc6}", "ಬುಧಾರ", "ಗುರುವಾರ", "ಶುಕ\u{ccd}ರರ", "ಶನ\u{cbf}ವಾರ"];
         /// `"%-d/%-m/%y"`
         pub const D_FMT: &str = "%-d/%-m/%y";
         /// `"%A %d %b %Y %I:%M:%S %p %Z"`
@@ -48040,8 +48040,8 @@ pub mod tcy_IN {
         pub const FIRST_WEEKDAY: Option<i64> = None;
         /// `None`
         pub const FIRST_WORKDAY: Option<i64> = None;
-        /// `&["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರುವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}\u{200c}\u{200c}", "ಮೇ", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲೈ", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}\u{200c}", "ಅಕ\u{ccd}ಟೋಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"]`
-        pub const MON: &[&str] = &["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರುವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}\u{200c}\u{200c}", "ಮೇ", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲೈ", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}\u{200c}", "ಅಕ\u{ccd}ಟೋಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"];
+        /// `&["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರುವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}\u{200c}\u{200c}", "ಮ\u{cc7}", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲ\u{cc8}", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}\u{200c}", "ಅಕ\u{ccd}ಟ\u{ccb}ಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"]`
+        pub const MON: &[&str] = &["ಜನವರ\u{cbf}", "ಫ\u{cc6}ಬ\u{ccd}ರುವರ\u{cbf}", "ಮಾರ\u{ccd}ಚ\u{ccd}", "ಏಪ\u{ccd}ರ\u{cbf}ಲ\u{ccd}\u{200c}\u{200c}", "ಮ\u{cc7}", "ಜ\u{cc2}ನ\u{ccd}", "ಜುಲ\u{cc8}", "ಆಗಸ\u{ccd}ಟ\u{ccd}", "ಸ\u{cc6}ಪ\u{ccd}ಟ\u{cc6}ಂಬರ\u{ccd}\u{200c}", "ಅಕ\u{ccd}ಟ\u{ccb}ಬರ\u{ccd}", "ನವ\u{cc6}ಂಬರ\u{ccd}", "ಡ\u{cbf}ಸ\u{cc6}ಂಬರ\u{ccd}"];
         /// `"%I:%M:%S %p %Z"`
         pub const T_FMT: &str = "%I:%M:%S %p %Z";
         /// `"%I:%M:%S %p %Z"`
