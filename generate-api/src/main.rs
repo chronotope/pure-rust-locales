@@ -61,7 +61,7 @@ fn main() -> Result<()> {
             );
         }
     } else {
-        eprintln!("Writing to file `{}`...", lib_file.display());
+        eprintln!("Writing to file `{lib_file}`...");
         let mut f = BufWriter::new(fs::File::create(&lib_file)?);
         write!(f, "{}", generator::CodeGenerator::new(locales))?;
     }
