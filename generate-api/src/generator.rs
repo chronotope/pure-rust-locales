@@ -402,6 +402,7 @@ impl CodeGenerator {
             #![no_std]
 
             #[derive(Debug)]
+            #[cfg_attr(feature = "defmt", derive(defmt::Format))]
             pub struct UnknownLocale;
 
             "#,
@@ -572,6 +573,13 @@ impl CodeGenerator {
             impl core::fmt::Debug for Locale {{
                 fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {{
                     core::fmt::Display::fmt(self, f)
+                }}
+            }}
+
+            #[cfg(feature = "defmt")]
+            impl defmt::Format for Locale {{
+                fn format(&self, f: defmt::Formatter) {{
+                    defmt::write!(f, "{{:?}}", self);
                 }}
             }}
 

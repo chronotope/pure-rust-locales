@@ -1,6 +1,7 @@
 #![no_std]
 
 #[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct UnknownLocale;
 
 #[allow(non_snake_case,non_camel_case_types,dead_code,unused_imports)]
@@ -56137,6 +56138,13 @@ impl core::fmt::Display for Locale {
 impl core::fmt::Debug for Locale {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         core::fmt::Display::fmt(self, f)
+    }
+}
+
+#[cfg(feature = "defmt")]
+impl defmt::Format for Locale {
+    fn format(&self, f: defmt::Formatter) {
+        defmt::write!(f, "{:?}", self);
     }
 }
 
