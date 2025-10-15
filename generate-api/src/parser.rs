@@ -7,7 +7,7 @@ use nom::{
         space1,
     },
     combinator::{all_consuming, cut, map, map_opt, map_parser, map_res, opt, verify},
-    error::{context, ErrorKind, ParseError},
+    error::{context, ErrorKind},
     multi::{fold_many0, fold_many1, many0, many1, separated_list},
     sequence::{preceded, separated_pair, terminated},
     IResult,
@@ -38,11 +38,11 @@ impl std::fmt::Display for Value {
     }
 }
 
-fn sp<'a, E: ParseError<&'a str>>(
-    i: &'a str,
+fn sp(
+    i: &str,
     escape_char: char,
     comment_char: char,
-) -> IResult<&'a str, Vec<&'a str>, E> {
+) -> IResult<&str, Vec<&str>, (&str, ErrorKind)> {
     let chars = "\n\r";
 
     many0(alt((
@@ -55,13 +55,13 @@ fn sp<'a, E: ParseError<&'a str>>(
     )))(i)
 }
 
-fn integer<'a, E: ParseError<&'a str>>(i: &'a str) -> IResult<&'a str, &'a str, E> {
+fn integer(i: &str) -> IResult<&str, &str, (&str, ErrorKind)> {
     let chars = "-0123456789";
 
     take_while1(move |c| chars.contains(c))(i)
 }
 
-fn parse_key<'a, E: ParseError<&'a str>>(i: &'a str) -> IResult<&'a str, String, E> {
+fn parse_key(i: &str) -> IResult<&str, String, (&str, ErrorKind)> {
     let chars = "abcdefghijklmnopqrstuvwxyz0123456789_-";
 
     alt((
@@ -76,11 +76,11 @@ fn parse_key<'a, E: ParseError<&'a str>>(i: &'a str) -> IResult<&'a str, String,
     ))(i)
 }
 
-fn parse_raw<'a, E: ParseError<&'a str>>(
-    i: &'a str,
+fn parse_raw(
+    i: &str,
     escape_char: char,
     comment_char: char,
-) -> IResult<&'a str, String, E> {
+) -> IResult<&str, String, (&str, ErrorKind)> {
     let chars = " \t\r\n;";
 
     fold_many1(
@@ -96,10 +96,7 @@ fn parse_raw<'a, E: ParseError<&'a str>>(
     )(i)
 }
 
-fn parse_str<'a, E: ParseError<&'a str>>(
-    i: &'a str,
-    escape_char: char,
-) -> IResult<&'a str, String, E> {
+fn parse_str(i: &str, escape_char: char) -> IResult<&str, String, (&str, ErrorKind)> {
     fold_many0(
         map_parser(
             alt((
@@ -117,10 +114,7 @@ fn parse_str<'a, E: ParseError<&'a str>>(
     )(i)
 }
 
-fn string<'a, E: ParseError<&'a str>>(
-    i: &'a str,
-    escape_char: char,
-) -> IResult<&'a str, String, E> {
+fn string(i: &str, escape_char: char) -> IResult<&str, String, (&str, ErrorKind)> {
     context(
         "string",
         alt((
@@ -133,7 +127,7 @@ fn string<'a, E: ParseError<&'a str>>(
     )(i)
 }
 
-fn unescape_unicode<'a, E: ParseError<&'a str>>(i: &'a str) -> IResult<&'a str, String, E> {
+fn unescape_unicode(i: &str) -> IResult<&str, String, (&str, ErrorKind)> {
     map(
         many0(alt((
             map(take_while1(|c| c != '<'), |x: &str| x.to_string()),
@@ -149,9 +143,7 @@ fn unescape_unicode<'a, E: ParseError<&'a str>>(i: &'a str) -> IResult<&'a str, 
     )(i)
 }
 
-fn parse_special_chars<'a, E: ParseError<&'a str>>(
-    mut i: &'a str,
-) -> IResult<&'a str, (char, char), E> {
+fn parse_special_chars(mut i: &str) -> IResult<&str, (char, char), (&str, ErrorKind)> {
     let mut comment_char = '%';
     let mut escape_char = '/';
 
@@ -173,11 +165,12 @@ fn parse_special_chars<'a, E: ParseError<&'a str>>(
     Ok((i, (comment_char, escape_char)))
 }
 
-fn key_value<'a, E: ParseError<&'a str>>(
-    i: &'a str,
+#[allow(clippy::type_complexity)]
+fn key_value(
+    i: &str,
     escape_char: char,
     comment_char: char,
-) -> IResult<&'a str, (String, Vec<Option<Value>>), E> {
+) -> IResult<&str, (String, Vec<Option<Value>>), (&str, ErrorKind)> {
     alt((
         separated_pair(
             preceded(|x| sp_comment(x, comment_char), parse_key),
@@ -190,11 +183,11 @@ fn key_value<'a, E: ParseError<&'a str>>(
     ))(i)
 }
 
-fn value<'a, E: ParseError<&'a str>>(
-    i: &'a str,
+fn value(
+    i: &str,
     escape_char: char,
     comment_char: char,
-) -> IResult<&'a str, Value, E> {
+) -> IResult<&str, Value, (&str, ErrorKind)> {
     preceded(
         |x| sp(x, escape_char, comment_char),
         alt((
@@ -211,27 +204,24 @@ pub struct Object {
     pub values: Vec<(String, Vec<Value>)>,
 }
 
-fn parse_object_head<'a, E: ParseError<&'a str>>(i: &'a str) -> IResult<&'a str, &'a str, E> {
+fn parse_object_head(i: &str) -> IResult<&str, &str, (&str, ErrorKind)> {
     let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
 
     take_while1(move |c| chars.contains(c))(i)
 }
 
-fn sp_comment<'a, E: ParseError<&'a str>>(
-    i: &'a str,
-    comment_char: char,
-) -> IResult<&'a str, Vec<&'a str>, E> {
+fn sp_comment(i: &str, comment_char: char) -> IResult<&str, Vec<&str>, (&str, ErrorKind)> {
     many0(alt((
         preceded(char(comment_char), not_line_ending),
         multispace1,
     )))(i)
 }
 
-fn object<'a, E: ParseError<&'a str>>(
-    i: &'a str,
+fn object(
+    i: &str,
     escape_char: char,
     comment_char: char,
-) -> IResult<&'a str, Object, E> {
+) -> IResult<&str, Object, (&str, ErrorKind)> {
     let (i, name) = preceded(|x| sp_comment(x, comment_char), parse_object_head)(i)?;
     let (i, values) = preceded(
         multispace0,
@@ -254,7 +244,7 @@ fn object<'a, E: ParseError<&'a str>>(
     ))
 }
 
-fn parse_locale<'a, E: ParseError<&'a str>>(mut i: &'a str) -> IResult<&'a str, Vec<Object>, E> {
+fn parse_locale(mut i: &str) -> IResult<&str, Vec<Object>, (&str, ErrorKind)> {
     let mut objects = Vec::new();
     // NOTE: the default comment_char is # because it's used in iso14651_t1_pinyin
     // NOTE: I don't know the default escape_char
@@ -263,7 +253,7 @@ fn parse_locale<'a, E: ParseError<&'a str>>(mut i: &'a str) -> IResult<&'a str, 
     let (comment_char, escape_char) = special_chars.unwrap_or(('#', '\0'));
 
     while !i.is_empty() {
-        match object::<(&str, ErrorKind)>(i, escape_char, comment_char) {
+        match object(i, escape_char, comment_char) {
             Ok(x) => {
                 let (rest, o) = x;
                 i = rest;
@@ -283,23 +273,24 @@ fn parse_locale<'a, E: ParseError<&'a str>>(mut i: &'a str) -> IResult<&'a str, 
 }
 
 pub fn parse(input: &str) -> Result<Vec<Object>> {
-    match parse_locale::<(&str, ErrorKind)>(input) {
+    match parse_locale(input) {
         Ok((_, objects)) => Ok(objects),
         Err(err) => bail!("could not parse input: {}", err),
     }
 }
 
 pub fn parse_lang(input: &str) -> Result<(&str, Option<&str>, Option<&str>)> {
-    fn inner_parser<'a, E: ParseError<&'a str>>(
-        i: &'a str,
-    ) -> IResult<&'a str, (&'a str, Option<&'a str>, Option<&'a str>), E> {
+    #[allow(clippy::type_complexity)]
+    fn inner_parser(
+        i: &str,
+    ) -> IResult<&str, (&str, Option<&str>, Option<&str>), (&str, ErrorKind)> {
         let (i, lang) = verify(alpha1, |x: &str| x != "translit")(i)?;
         let (i, country) = opt(preceded(char('_'), alpha1))(i)?;
         let (i, variant) = all_consuming(opt(preceded(char('@'), alpha1)))(i)?;
         Ok((i, (lang, country, variant)))
     }
 
-    match inner_parser::<(&str, ErrorKind)>(input) {
+    match inner_parser(input) {
         Ok((_, objects)) => Ok(objects),
         Err(err) => bail!("could not parse lang: {}", err),
     }
