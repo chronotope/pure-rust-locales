@@ -8,9 +8,9 @@ use nom::{
     },
     combinator::{all_consuming, cut, map, map_opt, map_parser, map_res, opt, verify},
     error::{context, ErrorKind},
-    multi::{fold_many0, fold_many1, many0, many1, separated_list},
+    multi::{fold_many0, fold_many1, many0, many1, separated_list0},
     sequence::{preceded, separated_pair, terminated},
-    IResult,
+    IResult, Parser,
 };
 
 #[derive(Debug, PartialEq)]
@@ -52,7 +52,8 @@ fn sp(
             take_while(move |c| !chars.contains(c) && c != escape_char),
         ),
         preceded(char(escape_char), take(1_usize)),
-    )))(i)
+    )))
+    .parse(i)
 }
 
 fn integer(i: &str) -> IResult<&str, &str, (&str, ErrorKind)> {
@@ -73,7 +74,8 @@ fn parse_key(i: &str) -> IResult<&str, String, (&str, ErrorKind)> {
             |x: &str| x.to_string(),
         ),
         map(alt((tag(".."), tag("UNDEFINED"))), |x: &str| x.to_string()),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_raw(
@@ -88,12 +90,13 @@ fn parse_raw(
             take_while1(move |c| !chars.contains(c) && c != comment_char && c != escape_char),
             preceded(char(escape_char), take(1_usize)),
         )),
-        String::new(),
+        String::new,
         |mut acc, item| {
             acc.push_str(item);
             acc
         },
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_str(i: &str, escape_char: char) -> IResult<&str, String, (&str, ErrorKind)> {
@@ -106,12 +109,13 @@ fn parse_str(i: &str, escape_char: char) -> IResult<&str, String, (&str, ErrorKi
             )),
             unescape_unicode,
         ),
-        String::new(),
+        String::new,
         |mut acc, item| {
             acc.push_str(item.as_str());
             acc
         },
-    )(i)
+    )
+    .parse(i)
 }
 
 fn string(i: &str, escape_char: char) -> IResult<&str, String, (&str, ErrorKind)> {
@@ -124,7 +128,8 @@ fn string(i: &str, escape_char: char) -> IResult<&str, String, (&str, ErrorKind)
                 cut(terminated(|x| parse_str(x, escape_char), char('\"'))),
             ),
         )),
-    )(i)
+    )
+    .parse(i)
 }
 
 fn unescape_unicode(i: &str) -> IResult<&str, String, (&str, ErrorKind)> {
@@ -140,7 +145,8 @@ fn unescape_unicode(i: &str) -> IResult<&str, String, (&str, ErrorKind)> {
             ),
         ))),
         |x: Vec<String>| x.join(""),
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_special_chars(mut i: &str) -> IResult<&str, (char, char), (&str, ErrorKind)> {
@@ -152,7 +158,8 @@ fn parse_special_chars(mut i: &str) -> IResult<&str, (char, char), (&str, ErrorK
             preceded(multispace0, alt((tag("comment_char"), tag("escape_char")))),
             space1,
             anychar,
-        )(i)?;
+        )
+        .parse(i)?;
         i = rest;
 
         match k {
@@ -175,12 +182,13 @@ fn key_value(
         separated_pair(
             preceded(|x| sp_comment(x, comment_char), parse_key),
             many1(alt((space1, preceded(char(escape_char), take(1_usize))))),
-            separated_list(one_of("; \t"), opt(|x| value(x, escape_char, comment_char))),
+            separated_list0(one_of("; \t"), opt(|x| value(x, escape_char, comment_char))),
         ),
         map(preceded(|x| sp_comment(x, comment_char), parse_key), |x| {
             (x, Vec::new())
         }),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn value(
@@ -195,7 +203,8 @@ fn value(
             map(|x| string(x, escape_char), Value::String),
             map(|x| parse_raw(x, escape_char, comment_char), Value::Raw),
         )),
-    )(i)
+    )
+    .parse(i)
 }
 
 #[derive(Debug, PartialEq)]
@@ -214,7 +223,8 @@ fn sp_comment(i: &str, comment_char: char) -> IResult<&str, Vec<&str>, (&str, Er
     many0(alt((
         preceded(char(comment_char), not_line_ending),
         multispace1,
-    )))(i)
+    )))
+    .parse(i)
 }
 
 fn object(
@@ -222,15 +232,17 @@ fn object(
     escape_char: char,
     comment_char: char,
 ) -> IResult<&str, Object, (&str, ErrorKind)> {
-    let (i, name) = preceded(|x| sp_comment(x, comment_char), parse_object_head)(i)?;
+    let (i, name) = preceded(|x| sp_comment(x, comment_char), parse_object_head).parse(i)?;
     let (i, values) = preceded(
         multispace0,
         many0(|x| key_value(x, escape_char, comment_char)),
-    )(i)?;
+    )
+    .parse(i)?;
     let (i, _) = preceded(
         |x| sp_comment(x, comment_char),
         terminated(tag(format!("END {}", name).as_str()), multispace0),
-    )(i)?;
+    )
+    .parse(i)?;
 
     Ok((
         i,
@@ -248,7 +260,7 @@ fn parse_locale(mut i: &str) -> IResult<&str, Vec<Object>, (&str, ErrorKind)> {
     let mut objects = Vec::new();
     // NOTE: the default comment_char is # because it's used in iso14651_t1_pinyin
     // NOTE: I don't know the default escape_char
-    let (rest, special_chars) = opt(parse_special_chars)(i)?;
+    let (rest, special_chars) = opt(parse_special_chars).parse(i)?;
     i = rest;
     let (comment_char, escape_char) = special_chars.unwrap_or(('#', '\0'));
 
@@ -260,7 +272,7 @@ fn parse_locale(mut i: &str) -> IResult<&str, Vec<Object>, (&str, ErrorKind)> {
                 objects.push(o);
             }
             _ => {
-                let (rest, _) = all_consuming(|x| sp_comment(x, comment_char))(i)?;
+                let (rest, _) = all_consuming(|x| sp_comment(x, comment_char)).parse(i)?;
                 i = rest;
                 if i.is_empty() {
                     break;
@@ -284,9 +296,9 @@ pub fn parse_lang(input: &str) -> Result<(&str, Option<&str>, Option<&str>)> {
     fn inner_parser(
         i: &str,
     ) -> IResult<&str, (&str, Option<&str>, Option<&str>), (&str, ErrorKind)> {
-        let (i, lang) = verify(alpha1, |x: &str| x != "translit")(i)?;
-        let (i, country) = opt(preceded(char('_'), alpha1))(i)?;
-        let (i, variant) = all_consuming(opt(preceded(char('@'), alpha1)))(i)?;
+        let (i, lang) = verify(alpha1, |x: &str| x != "translit").parse(i)?;
+        let (i, country) = opt(preceded(char('_'), alpha1)).parse(i)?;
+        let (i, variant) = all_consuming(opt(preceded(char('@'), alpha1))).parse(i)?;
         Ok((i, (lang, country, variant)))
     }
 
